@@ -3,6 +3,10 @@
 #include <iostream>
 #include <GL/glfw.h>
 
+#include "Scene.h"
+
+static Scene* scene;
+
 static void error(int error, const char* description)
 {
 }
@@ -11,6 +15,7 @@ static void key(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
   if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
     glfwSetWindowShouldClose(window, GL_TRUE);
+  scene->key(key, scancode, action, mods);
 }
 
 int main(void)
@@ -33,7 +38,7 @@ int main(void)
     int width, height;
     double time = glfwGetTime(), delta = time - last_time;
     glfwGetFramebufferSize(window, &width, &height);
-    //render
+    scene->render(delta, width, height);
     glfwSwapBuffers(window);
     glfwPollEvents();
     last_time = time;
