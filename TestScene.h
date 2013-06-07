@@ -1,16 +1,16 @@
 #ifndef TESTSCENE_H
 #define TESTSCENE_H
 
-#inlcude "Scene.h"
+#include "Scene.h"
 
-class TestScene : Scene
+class TestScene : public Scene
 {
 public:
-  Scene();
-  virtual ~Scene();
+  TestScene();
+  virtual ~TestScene();
 
-  void key(int key, int scancode, int action, int mods) = 0;
-  void render(double delta, int width, int height) = 0;
+  void key(int key, int scancode, int action, int mods);
+  void render(double delta, int width, int height);
 };
 
 #endif

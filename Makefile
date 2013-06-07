@@ -1,6 +1,6 @@
 CXXFLAGS =	-O2 -g -Wall -fmessage-length=0
 
-OBJS =		glfw-thinger.o
+OBJS =		glfw-thinger.o TestScene.o
 
 LIBS =          -lGL -lGLU -lglfw
 

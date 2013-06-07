@@ -1,17 +1,18 @@
 #include "TestScene.h"
 
-Scene::Scene()
+TestScene::TestScene()
+  : Scene()
 {
 }
 
-Scene::~Scene()
+TestScene::~TestScene()
 {
 }
 
-void Scene::key(int key, int scancode, int action, int mods)
+void TestScene::key(int key, int scancode, int action, int mods)
 {
 }
 
-void Scene::render(double delta, int width, int height)
+void TestScene::render(double delta, int width, int height)
 {
 }

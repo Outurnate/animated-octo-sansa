@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
-#include <GL/glfw.h>
+#include <GLFW/glfw3.h>
 
 #include "Scene.h"
 #include "TestScene.h"
