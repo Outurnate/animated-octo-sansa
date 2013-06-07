@@ -4,6 +4,7 @@
 #include <GL/glfw.h>
 
 #include "Scene.h"
+#include "TestScene.h"
 
 static Scene* scene;
 
@@ -21,6 +22,7 @@ static void key(GLFWwindow* window, int key, int scancode, int action, int mods)
 int main(void)
 {
   GLFWwindow* window;
+  scene = new TestScene();
 
   glfwSetErrorCallback(error);
   if (!glfwInit())
