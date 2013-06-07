@@ -9,7 +9,6 @@ public:
   TestScene();
   virtual ~TestScene();
 
-  void init();
   void key(int key, int scancode, int action, int mods);
   void render(double delta, int width, int height);
 };

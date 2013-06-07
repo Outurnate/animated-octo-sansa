@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
+
+#define GLFW_INCLUDE_GLU
 #include <GLFW/glfw3.h>
 
 #include "Scene.h"
@@ -35,6 +37,7 @@ int main(void)
   glfwMakeContextCurrent(window);
   glfwSetKeyCallback(window, key);
   double last_time = 0.0;
+  scene->init();
   while(!glfwWindowShouldClose(window))
   {
     int width, height;
