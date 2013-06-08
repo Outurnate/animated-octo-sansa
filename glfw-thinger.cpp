@@ -3,6 +3,7 @@
 #include <iostream>
 
 #define GLFW_INCLUDE_GLU
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
 #include "Scene.h"
@@ -12,6 +13,7 @@ static Scene* scene;
 
 static void error(int error, const char* description)
 {
+  std::cout << description << std::endl;
 }
 
 static void key(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -37,6 +39,9 @@ int main(void)
   glfwMakeContextCurrent(window);
   glfwSetKeyCallback(window, key);
   double last_time = 0.0;
+
+  glewExperimental = GL_TRUE;
+  glewInit();
   scene->init();
   while(!glfwWindowShouldClose(window))
   {
@@ -48,6 +53,7 @@ int main(void)
     glfwPollEvents();
     last_time = time;
   }
+  scene->destroy();
   glfwDestroyWindow(window);
   glfwTerminate();
   return EXIT_SUCCESS;
