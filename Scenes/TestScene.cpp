@@ -168,6 +168,22 @@ void TestScene::render(GLFWwindow* window, double delta, int width, int height)
 
   glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
 
+  glEnable(GL_LIGHT0);
+  glEnable(GL_NORMALIZE);
+  glEnable(GL_COLOR_MATERIAL);
+  glEnable(GL_LIGHTING);
+
+  // Directional light.  Sun
+  glLightfv(GL_LIGHT0, GL_AMBIENT,  { 0.0f, 0.0f, 0.0f, 1.0f });
+  glLightfv(GL_LIGHT0, GL_DIFFUSE,  { 1.0f, 1.0f, 1.0f, 1.0f });
+  glLightfv(GL_LIGHT0, GL_SPECULAR, { 1.0f, 1.0f, 1.0f, 1.0f });
+  glLightfv(GL_LIGHT0, GL_POSITION, { 2.0f, 5.0f, 5.0f, 0.0f });
+
+  glMaterialfv(GL_FRONT, GL_AMBIENT,   { 0.7f, 0.7f, 0.7f, 1.0f });
+  glMaterialfv(GL_FRONT, GL_DIFFUSE,   { 0.8f, 0.8f, 0.8f, 1.0f });
+  glMaterialfv(GL_FRONT, GL_SPECULAR,  { 1.0f, 1.0f, 1.0f, 1.0f });
+  glMaterialfv(GL_FRONT, GL_SHININESS, { 100.0f });
+
   point3f dir({ cos(dy) * sin(dx), sin(dy), cos(dy) * cos(dx)});
   point3f right({ sin(dx - (M_PI / 2.0f)), 0, cos(dx - (M_PI / 2.0f)) });
   point3f up({ (right.y * dir.z) - (right.z * dir.y), (right.z * dir.x) - (right.x * dir.z), (right.x * dir.y) - (right.y * dir.x) });
