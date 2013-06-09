@@ -10,6 +10,9 @@ TestScene::TestScene(GLFWwindow* window)
     n_verticies_map(map_width * map_height * 3), n_indicies_map(map_width * map_height * 6)
 {
   memset(map, 0.0f, map_width * map_height);
+  for(unsigned x = 0; x < map_width; ++x)
+    for(unsigned y = 0; y < map_height; ++y)
+      map[(y * map_width) + x] = x * y;
 }
 
 TestScene::~TestScene()
@@ -91,6 +94,8 @@ void TestScene::init(GLFWwindow* window)
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LEQUAL);
 
+  glShadeModel(GL_SMOOTH);
+
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
   GLfloat verticies_map[n_verticies_map];
@@ -164,25 +169,30 @@ void TestScene::render(GLFWwindow* window, double delta, int width, int height)
 
   glClearColor(0.0, 0.0, 0.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glColor3d(1.0, 1.0, 1.0);
+  glColor3d(0.0, 1.0, 0.0);
 
   glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
 
   glEnable(GL_LIGHT0);
-  glEnable(GL_NORMALIZE);
+  glEnable(GL_LIGHT1);
+  //glEnable(GL_NORMALIZE);
   glEnable(GL_COLOR_MATERIAL);
   glEnable(GL_LIGHTING);
 
-  // Directional light.  Sun
-  glLightfv(GL_LIGHT0, GL_AMBIENT,  { 0.0f, 0.0f, 0.0f, 1.0f });
-  glLightfv(GL_LIGHT0, GL_DIFFUSE,  { 1.0f, 1.0f, 1.0f, 1.0f });
-  glLightfv(GL_LIGHT0, GL_SPECULAR, { 1.0f, 1.0f, 1.0f, 1.0f });
-  glLightfv(GL_LIGHT0, GL_POSITION, { 2.0f, 5.0f, 5.0f, 0.0f });
+  const GLfloat light_0_ambient[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
+  const GLfloat light_0_diffuse[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
+  const GLfloat light_0_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+  const GLfloat light_0_position[] = { 0.0f, 5.0f, 5.0f, 0.0f };
 
-  glMaterialfv(GL_FRONT, GL_AMBIENT,   { 0.7f, 0.7f, 0.7f, 1.0f });
-  glMaterialfv(GL_FRONT, GL_DIFFUSE,   { 0.8f, 0.8f, 0.8f, 1.0f });
-  glMaterialfv(GL_FRONT, GL_SPECULAR,  { 1.0f, 1.0f, 1.0f, 1.0f });
-  glMaterialfv(GL_FRONT, GL_SHININESS, { 100.0f });
+  const GLfloat light_1_ambient[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
+  const GLfloat light_1_diffuse[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
+  const GLfloat light_1_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+  const GLfloat light_1_position[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+
+  const GLfloat mat_ambient[]    = { 0.7f, 0.7f, 0.7f, 1.0f };
+  const GLfloat mat_diffuse[]    = { 0.8f, 0.8f, 0.8f, 1.0f };
+  const GLfloat mat_specular[]   = { 1.0f, 1.0f, 1.0f, 1.0f };
+  const GLfloat high_shininess[] = { 100.0f };
 
   point3f dir({ cos(dy) * sin(dx), sin(dy), cos(dy) * cos(dx)});
   point3f right({ sin(dx - (M_PI / 2.0f)), 0, cos(dx - (M_PI / 2.0f)) });
@@ -192,9 +202,31 @@ void TestScene::render(GLFWwindow* window, double delta, int width, int height)
 	    current_pos.x + dir.x, current_pos.y + dir.y, current_pos.z + dir.z,
 	    up.x,                  up.y,                  up.z);
 
+  // Default material
+  glMaterialfv(GL_FRONT, GL_AMBIENT,   mat_ambient);
+  glMaterialfv(GL_FRONT, GL_DIFFUSE,   mat_diffuse);
+  glMaterialfv(GL_FRONT, GL_SPECULAR,  mat_specular);
+  glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
+
   glEnableClientState(GL_VERTEX_ARRAY);
   glBindBuffer(GL_ARRAY_BUFFER, map_vbo);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, map_ibo);
   glDrawElements(GL_TRIANGLES, n_indicies_map, GL_UNSIGNED_SHORT, NULL);
   glDisableClientState(GL_VERTEX_ARRAY);
+
+  // Directional light.  Sun
+  glLightfv(GL_LIGHT0, GL_AMBIENT,  light_0_ambient);
+  glLightfv(GL_LIGHT0, GL_DIFFUSE,  light_0_diffuse);
+  glLightfv(GL_LIGHT0, GL_SPECULAR, light_0_specular);
+  glLightfv(GL_LIGHT0, GL_POSITION, light_0_position);
+
+  glLoadIdentity();
+
+  // Camera light
+  glLightfv(GL_LIGHT1, GL_AMBIENT,  light_1_ambient);
+  glLightfv(GL_LIGHT1, GL_DIFFUSE,  light_1_diffuse);
+  glLightfv(GL_LIGHT1, GL_SPECULAR, light_1_specular);
+  glLightfv(GL_LIGHT1, GL_POSITION, light_1_position);
+
+  glClear(GL_DEPTH_BUFFER_BIT);
 }
