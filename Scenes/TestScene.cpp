@@ -3,6 +3,8 @@
 #include <string.h>
 #include <iostream>
 #include <tgmath.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/noise.hpp>
 
 TestScene::TestScene(GLFWwindow* window)
   : Scene(), map_width(256), map_height(256), map(new float[map_width * map_height]), current_pos({ 1.5f, 100.0f, 6.0f }),
@@ -12,7 +14,7 @@ TestScene::TestScene(GLFWwindow* window)
   memset(map, 0.0f, map_width * map_height);
   for(unsigned x = 0; x < map_width; ++x)
     for(unsigned y = 0; y < map_height; ++y)
-      map[(y * map_width) + x] = x * y;
+      map[(y * map_width) + x] = (glm::simplex(glm::vec4(x / 8.0f, y / 8.0f, 0.5f, 0.5f)) * 10.0f) + (glm::simplex(glm::vec4(x / 32.0f, y / 32.0f, 0.5f, 0.5f)) * 100.0f);
 }
 
 TestScene::~TestScene()
@@ -136,26 +138,26 @@ void TestScene::render(GLFWwindow* window, double delta, int width, int height)
 {
   if (key_w)
   {
-    current_pos.x += sin(dx) * delta * 20.0f;
-    current_pos.z += cos(dx) * delta * 20.0f;
+    current_pos.x += sin(dx) * delta * 100.0f;
+    current_pos.z += cos(dx) * delta * 100.0f;
   }
   if (key_s)
   {
-    current_pos.x -= sin(dx) * delta * 20.0f;
-    current_pos.z -= cos(dx) * delta * 20.0f;
+    current_pos.x -= sin(dx) * delta * 100.0f;
+    current_pos.z -= cos(dx) * delta * 100.0f;
   }
   if (key_a)
   {
-    current_pos.x += sin(dx + (M_PI / 2.0f)) * delta * 20.0f;
-    current_pos.z += cos(dx + (M_PI / 2.0f)) * delta * 20.0f;
+    current_pos.x += sin(dx + (M_PI / 2.0f)) * delta * 100.0f;
+    current_pos.z += cos(dx + (M_PI / 2.0f)) * delta * 100.0f;
   }
   if (key_d)
   {
-    current_pos.x -= sin(dx + (M_PI / 2.0f)) * delta * 20.0f;
-    current_pos.z -= cos(dx + (M_PI / 2.0f)) * delta * 20.0f;
+    current_pos.x -= sin(dx + (M_PI / 2.0f)) * delta * 100.0f;
+    current_pos.z -= cos(dx + (M_PI / 2.0f)) * delta * 100.0f;
   }
-  if (key_space) current_pos.y += delta * 20.0f;
-  if (key_shift) current_pos.y -= delta * 20.0f;
+  if (key_space) current_pos.y += delta * 200.0f;
+  if (key_shift) current_pos.y -= delta * 200.0f;
 
   float ar = (float)width / (float)height;
 
