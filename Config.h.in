@@ -1,0 +1,2 @@
+#define glfw-thinger_VERSION_MAJOR @glfw-thinger_VERSION_MAJOR@
+#define glfw-thinger_VERSION_MINOR @glfw-thinger_VERSION_MINOR@
