@@ -1,3 +1,4 @@
+ADD_DEFINITIONS(-std=c++11)
 add_library(Scenes TestScene.cpp)
 find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIRS} ${OPENGL_glu_INCLUDE_DIRS})

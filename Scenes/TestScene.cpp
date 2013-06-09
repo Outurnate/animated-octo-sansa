@@ -2,9 +2,10 @@
 
 #include <string.h>
 #include <iostream>
+#include <tgmath.h>
 
-TestScene::TestScene()
-  : Scene(), map_width(256), map_height(256), map(new float[map_width * map_height]), current_pos({ -1.5f, -1.0f, -6.0f }),
+TestScene::TestScene(GLFWwindow* window)
+  : Scene(), map_width(256), map_height(256), map(new float[map_width * map_height]), current_pos({ 1.5f, 100.0f, 6.0f }),
     key_w(false), key_a(false), key_s(false), key_d(false), key_space(false), key_shift(false), wireframe(false),
     n_verticies_map(map_width * map_height * 3), n_indicies_map(map_width * map_height * 6)
 {
@@ -16,7 +17,7 @@ TestScene::~TestScene()
 }
 
 
-void TestScene::key(int key, int scancode, int action, int mods)
+void TestScene::key(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
   if (action == GLFW_PRESS)
     switch(key)
@@ -67,19 +68,30 @@ void TestScene::key(int key, int scancode, int action, int mods)
     }
 }
 
-void TestScene::destroy()
+void TestScene::mouse(GLFWwindow* window, double x, double y)
+{
+  int width, height;
+  glfwGetFramebufferSize(window, &width, &height);
+  dx += ((width / 2) - x) / 1000.0f;
+  dy += ((height / 2) - y) / 1000.0f;
+  glfwSetCursorPos(window, width / 2, height / 2);
+}
+
+void TestScene::destroy(GLFWwindow* window)
 {
   glDeleteBuffers(1, &map_vbo);
   glDeleteBuffers(1, &map_ibo);
 }
 
-void TestScene::init()
+void TestScene::init(GLFWwindow* window)
 {
   glEnable(GL_CULL_FACE);
   glCullFace(GL_BACK);
 
   glEnable(GL_DEPTH_TEST);
-  glDepthFunc(GL_LESS);
+  glDepthFunc(GL_LEQUAL);
+
+  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
   GLfloat verticies_map[n_verticies_map];
   GLushort indicies_map[n_indicies_map];
@@ -115,14 +127,30 @@ void TestScene::init()
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicies_map), indicies_map, GL_STATIC_DRAW);
 }
 
-void TestScene::render(double delta, int width, int height)
+void TestScene::render(GLFWwindow* window, double delta, int width, int height)
 {
-  if (key_w)     current_pos.z += delta * 50.0f;
-  if (key_s)     current_pos.z -= delta * 50.0f;
-  if (key_a)     current_pos.x += delta * 50.0f;
-  if (key_d)     current_pos.x -= delta * 50.0f;
-  if (key_space) current_pos.y -= delta * 5.0f;
-  if (key_shift) current_pos.y += delta * 5.0f;
+  if (key_w)
+  {
+    current_pos.x += sin(dx) * delta * 20.0f;
+    current_pos.z += cos(dx) * delta * 20.0f;
+  }
+  if (key_s)
+  {
+    current_pos.x -= sin(dx) * delta * 20.0f;
+    current_pos.z -= cos(dx) * delta * 20.0f;
+  }
+  if (key_a)
+  {
+    current_pos.x += sin(dx + (M_PI / 2.0f)) * delta * 20.0f;
+    current_pos.z += cos(dx + (M_PI / 2.0f)) * delta * 20.0f;
+  }
+  if (key_d)
+  {
+    current_pos.x -= sin(dx + (M_PI / 2.0f)) * delta * 20.0f;
+    current_pos.z -= cos(dx + (M_PI / 2.0f)) * delta * 20.0f;
+  }
+  if (key_space) current_pos.y += delta * 20.0f;
+  if (key_shift) current_pos.y -= delta * 20.0f;
 
   float ar = (float)width / (float)height;
 
@@ -130,18 +158,23 @@ void TestScene::render(double delta, int width, int height)
 
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  glFrustum(-ar, ar, -1.0, 1.0, 2.0, 500.0);
+  glFrustum(-ar, ar, -1.0, 1.0, 2.0, 2560.0);
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
 
   glClearColor(0.0, 0.0, 0.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glColor3d(1.0, 1.0, 1.0);
-  glLoadIdentity();
 
   glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
 
-  glTranslatef(current_pos.x, current_pos.y, current_pos.z);
+  point3f dir({ cos(dy) * sin(dx), sin(dy), cos(dy) * cos(dx)});
+  point3f right({ sin(dx - (M_PI / 2.0f)), 0, cos(dx - (M_PI / 2.0f)) });
+  point3f up({ (right.y * dir.z) - (right.z * dir.y), (right.z * dir.x) - (right.x * dir.z), (right.x * dir.y) - (right.y * dir.x) });
+
+  gluLookAt(current_pos.x,         current_pos.y,         current_pos.z,
+	    current_pos.x + dir.x, current_pos.y + dir.y, current_pos.z + dir.z,
+	    up.x,                  up.y,                  up.z);
 
   glEnableClientState(GL_VERTEX_ARRAY);
   glBindBuffer(GL_ARRAY_BUFFER, map_vbo);

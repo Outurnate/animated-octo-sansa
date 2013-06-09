@@ -19,14 +19,16 @@ private:
   GLuint map_vbo, map_ibo;
   size_t n_verticies_map;
   size_t n_indicies_map;
+  double dx, dy;
 public:
-  TestScene();
+  TestScene(GLFWwindow* window);
   virtual ~TestScene();
 
-  virtual void init();
-  virtual void key(int key, int scancode, int action, int mods);
-  virtual void render(double delta, int width, int height);
-  virtual void destroy();
+  virtual void init(GLFWwindow* window);
+  virtual void key(GLFWwindow* window, int key, int scancode, int action, int mods);
+  virtual void mouse(GLFWwindow* window, double x, double y);
+  virtual void render(GLFWwindow* window, double delta, int width, int height);
+  virtual void destroy(GLFWwindow* window);
 };
 
 #endif

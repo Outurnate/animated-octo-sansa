@@ -3,6 +3,7 @@ project (glfw-thinger)
 include (FindGLEW.cmake)
 set (glfw-thinger_VERSION_MAJOR 1)
 set (glfw-thinger_VERSION_MINOR 0)
+ADD_DEFINITIONS(-std=c++11)
 configure_file (
   "${PROJECT_SOURCE_DIR}/Config.h.in"
   "${PROJECT_BINARY_DIR}/Config.h"
