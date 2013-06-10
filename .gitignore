@@ -1,0 +1,15 @@
+*.slo
+*.lo
+*.o
+*.so
+*.dylib
+*.lai
+*.la
+*.a
+PPC603gnu
+#*#
+*~
+.#*~
+.result
+.ucpp
+Makefile
