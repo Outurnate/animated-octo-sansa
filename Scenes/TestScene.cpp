@@ -209,9 +209,10 @@ void TestScene::render(GLFWwindow* window, double delta, int width, int height)
   const GLfloat mat_specular[]   = { 1.0f, 1.0f, 1.0f, 1.0f };
   const GLfloat high_shininess[] = { 100.0f };
 
-  point3f dir({ cos(dy) * sin(dx), sin(dy), cos(dy) * cos(dx)});
-  point3f right({ sin(dx - (M_PI / 2.0f)), 0, cos(dx - (M_PI / 2.0f)) });
-  point3f up({ (right.y * dir.z) - (right.z * dir.y), (right.z * dir.x) - (right.x * dir.z), (right.x * dir.y) - (right.y * dir.x) });
+  // TODO: use glm
+  point3f dir({ (float)(cos(dy) * sin(dx)), (float)sin(dy), (float)(cos(dy) * cos(dx)) });
+  point3f right({ (float)sin(dx - (M_PI / 2.0f)), 0.0f, (float)cos(dx - (M_PI / 2.0f)) });
+  point3f up({ (float)((right.y * dir.z) - (right.z * dir.y)), (float)((right.z * dir.x) - (right.x * dir.z)), (float)((right.x * dir.y) - (right.y * dir.x)) });
 
   gluLookAt(current_pos.x,         current_pos.y,         current_pos.z,
 	    current_pos.x + dir.x, current_pos.y + dir.y, current_pos.z + dir.z,
