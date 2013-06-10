@@ -8,14 +8,24 @@
 #include <glm/gtc/noise.hpp>
 
 TestScene::TestScene(GLFWwindow* window)
-  : Scene(), map_width(256), map_height(256), map(new float[map_width * map_height]), current_pos({ 1.5f, 100.0f, 6.0f }),
+  : Scene(), map_width(256), map_height(256), map(new float[map_width * map_height]), map_normal(new float[map_width * map_height * 3]),
+    current_pos({ 1.5f, 100.0f, 6.0f }),
     key_w(false), key_a(false), key_s(false), key_d(false), key_space(false), key_shift(false), wireframe(false),
     n_verticies_map(map_width * map_height * 3), n_indicies_map(map_width * map_height * 6), font_AverageMono("AverageMono.ttf")
 {
-  memset(map, 0.0f, map_width * map_height);
   for(unsigned x = 0; x < map_width; ++x)
     for(unsigned y = 0; y < map_height; ++y)
       map[(y * map_width) + x] = 0;/*(glm::simplex(glm::vec4(x / 8.0f, y / 8.0f, 0.5f, 0.5f)) * 10.0f) + (glm::simplex(glm::vec4(x / 32.0f, y / 32.0f, 0.5f, 0.5f)) * 100.0f);*/
+  for(unsigned x = 0; x < map_width; ++x)
+    for(unsigned y = 0; y < map_height; ++y)
+    {
+      glm::vec3 normal = glm::normalize(glm::cross(
+      ((x == 0)                ? glm::vec3(x, y, map[(y * map_width) + x]) : glm::vec3(x - 1, y,      (y      * map_width) + x - 1)) -
+      ((x == (map_width  - 1)) ? glm::vec3(x, y, map[(y * map_width) + x]) : glm::vec3(x + 1, y,      (y      * map_width) + x + 1)),
+      ((y == 0)                ? glm::vec3(x, y, map[(y * map_width) + x]) : glm::vec3(x,     y - 1, ((y - 1) * map_width) + x)) -
+      ((x == (map_height - 1)) ? glm::vec3(x, y, map[(y * map_width) + x]) : glm::vec3(x,     y + 1, ((y + 1) * map_width) + x))));
+      std::cout << normal.x << "," << normal.y << "," << normal.z << std::endl;
+    }
 }
 
 TestScene::~TestScene()

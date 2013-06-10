@@ -15,6 +15,7 @@ class TestScene : public Scene
 private:
   unsigned map_width, map_height;
   float* map;
+  float* map_normal;
   point3f current_pos;
   bool key_w, key_a, key_s, key_d, key_space, key_shift, wireframe;
   GLuint map_vbo, map_ibo;
