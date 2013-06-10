@@ -4,6 +4,7 @@
 #define GLFW_INCLUDE_GLU
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <FTGL/ftgl.h>
 
 #include "Scene.h"
 
@@ -20,6 +21,7 @@ private:
   size_t n_verticies_map;
   size_t n_indicies_map;
   double dx, dy;
+  FTGLPixmapFont font_AverageMono;
 public:
   TestScene(GLFWwindow* window);
   virtual ~TestScene();

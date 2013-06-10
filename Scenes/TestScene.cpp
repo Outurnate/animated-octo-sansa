@@ -1,5 +1,6 @@
 #include "TestScene.h"
 
+#include <sstream>
 #include <string.h>
 #include <iostream>
 #include <tgmath.h>
@@ -9,12 +10,12 @@
 TestScene::TestScene(GLFWwindow* window)
   : Scene(), map_width(256), map_height(256), map(new float[map_width * map_height]), current_pos({ 1.5f, 100.0f, 6.0f }),
     key_w(false), key_a(false), key_s(false), key_d(false), key_space(false), key_shift(false), wireframe(false),
-    n_verticies_map(map_width * map_height * 3), n_indicies_map(map_width * map_height * 6)
+    n_verticies_map(map_width * map_height * 3), n_indicies_map(map_width * map_height * 6), font_AverageMono("AverageMono.ttf")
 {
   memset(map, 0.0f, map_width * map_height);
   for(unsigned x = 0; x < map_width; ++x)
     for(unsigned y = 0; y < map_height; ++y)
-      map[(y * map_width) + x] = (glm::simplex(glm::vec4(x / 8.0f, y / 8.0f, 0.5f, 0.5f)) * 10.0f) + (glm::simplex(glm::vec4(x / 32.0f, y / 32.0f, 0.5f, 0.5f)) * 100.0f);
+      map[(y * map_width) + x] = 0;/*(glm::simplex(glm::vec4(x / 8.0f, y / 8.0f, 0.5f, 0.5f)) * 10.0f) + (glm::simplex(glm::vec4(x / 32.0f, y / 32.0f, 0.5f, 0.5f)) * 100.0f);*/
 }
 
 TestScene::~TestScene()
@@ -164,9 +165,11 @@ void TestScene::render(GLFWwindow* window, double delta, int width, int height)
   glViewport(0, 0, width, height);
 
   glMatrixMode(GL_PROJECTION);
+  glPushMatrix();
   glLoadIdentity();
   glFrustum(-ar, ar, -1.0, 1.0, 2.0, 2560.0);
   glMatrixMode(GL_MODELVIEW);
+  glPushMatrix();
   glLoadIdentity();
 
   glClearColor(0.0, 0.0, 0.0, 1.0);
@@ -177,7 +180,7 @@ void TestScene::render(GLFWwindow* window, double delta, int width, int height)
 
   glEnable(GL_LIGHT0);
   glEnable(GL_LIGHT1);
-  //glEnable(GL_NORMALIZE);
+  glEnable(GL_NORMALIZE);
   glEnable(GL_COLOR_MATERIAL);
   glEnable(GL_LIGHTING);
 
@@ -230,5 +233,12 @@ void TestScene::render(GLFWwindow* window, double delta, int width, int height)
   glLightfv(GL_LIGHT1, GL_SPECULAR, light_1_specular);
   glLightfv(GL_LIGHT1, GL_POSITION, light_1_position);
 
-  glClear(GL_DEPTH_BUFFER_BIT);
+  glPixelTransferf(GL_RED_BIAS,  -1.0f);
+  glPixelTransferf(GL_GREEN_BIAS, 0.0f);
+  glPixelTransferf(GL_BLUE_BIAS, -1.0f);
+
+  font_AverageMono.FaceSize(16);
+  font_AverageMono.Render("Test Scene", -1, FTPoint(0.0f, 32.0f));
+  font_AverageMono.Render(static_cast<std::ostringstream*>(&(std::ostringstream() << "Wireframe : " << wireframe))->str().c_str(), -1, FTPoint(0.0f, 16.0f));
+  font_AverageMono.Render(static_cast<std::ostringstream*>(&(std::ostringstream() << width << "x" << height))->str().c_str(), -1, FTPoint(0.0f, 0.0f));
 }
