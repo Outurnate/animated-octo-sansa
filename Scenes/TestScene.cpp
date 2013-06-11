@@ -15,15 +15,15 @@ TestScene::TestScene(GLFWwindow* window)
 {
   for(unsigned x = 0; x < map_width; ++x)
     for(unsigned y = 0; y < map_height; ++y)
-      map[(y * map_width) + x] = 0;/*(glm::simplex(glm::vec4(x / 8.0f, y / 8.0f, 0.5f, 0.5f)) * 10.0f) + (glm::simplex(glm::vec4(x / 32.0f, y / 32.0f, 0.5f, 0.5f)) * 100.0f);*/
+      map[(y * map_width) + x] = 0;//(glm::simplex(glm::vec4(x / 8.0f, y / 8.0f, 0.5f, 0.5f)) * 10.0f) + (glm::simplex(glm::vec4(x / 32.0f, y / 32.0f, 0.5f, 0.5f)) * 100.0f);
   for(unsigned x = 0; x < map_width; ++x)
     for(unsigned y = 0; y < map_height; ++y)
     {
       glm::vec3 normal = glm::normalize(glm::cross(
-      ((x == 0)                ? glm::vec3(x, y, map[(y * map_width) + x]) : glm::vec3(x - 1, y,      (y      * map_width) + x - 1)) -
-      ((x == (map_width  - 1)) ? glm::vec3(x, y, map[(y * map_width) + x]) : glm::vec3(x + 1, y,      (y      * map_width) + x + 1)),
-      ((y == 0)                ? glm::vec3(x, y, map[(y * map_width) + x]) : glm::vec3(x,     y - 1, ((y - 1) * map_width) + x)) -
-      ((x == (map_height - 1)) ? glm::vec3(x, y, map[(y * map_width) + x]) : glm::vec3(x,     y + 1, ((y + 1) * map_width) + x))));
+      ((x == 0)                ? glm::vec3(x, map[(y * map_width) + x], y) : glm::vec3(x - 1, map[(y       * map_width) + x - 1], y)) -
+      ((x == (map_width  - 1)) ? glm::vec3(x, map[(y * map_width) + x], y) : glm::vec3(x + 1, map[(y       * map_width) + x + 1], y)),
+      ((y == 0)                ? glm::vec3(x, map[(y * map_width) + x], y) : glm::vec3(x,     map[((y - 1) * map_width) + x],    y - 1)) -
+      ((y == (map_height - 1)) ? glm::vec3(x, map[(y * map_width) + x], y) : glm::vec3(x,     map[((y + 1) * map_width) + x],    y + 1))));
       std::cout << normal.x << "," << normal.y << "," << normal.z << std::endl;
     }
 }
