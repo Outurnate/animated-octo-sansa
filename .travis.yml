@@ -1,0 +1,7 @@
+language: cpp
+compiler:
+  - clang
+  - gcc
+before_script:
+  - sudo apt-get install cmake libglew-dev libftgl-dev libglm-dev libassimp-dev libglfw-dev
+script: cmake . && make
