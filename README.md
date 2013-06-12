@@ -1,6 +1,8 @@
 animated-octo-sansa
 ===================
 
+[![Build Status](https://travis-ci.org/josephd/animated-octo-sansa.png?branch=master)](https://travis-ci.org/josephd/animated-octo-sansa)
+
 Github definitely has better names for my projects than I do.  This is a GLFW/GLU based experiment.  Currently, it only has a terrain generation scene, but will have other things later.
 
 Compiling
