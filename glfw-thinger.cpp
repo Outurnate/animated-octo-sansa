@@ -8,6 +8,7 @@
 
 #include "Scene.h"
 #include "TestScene.h"
+#include "Scene2D.h"
 
 static Scene* scene;
 
@@ -31,7 +32,7 @@ static void mouse(GLFWwindow* window, double x, double y)
 int main(void)
 {
   GLFWwindow* window;
-  scene = new TestScene(window);
+  scene = new Scene2D();//new TestScene(); // gotta make a picker soon
 
   glfwSetErrorCallback(error);
   if (!glfwInit())

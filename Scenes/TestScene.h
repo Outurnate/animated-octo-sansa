@@ -25,7 +25,7 @@ private:
   double dx, dy;
   FTGLPixmapFont font_AverageMono;
 public:
-  TestScene(GLFWwindow* window);
+  TestScene();
   virtual ~TestScene();
 
   virtual void init(GLFWwindow* window);

@@ -6,7 +6,7 @@
 #include <tgmath.h>
 #include <glm/gtc/noise.hpp>
 
-TestScene::TestScene(GLFWwindow* window)
+TestScene::TestScene()
   : Scene(), map_width(128), map_height(128), map(new float[map_width * map_height]), map_normal(new glm::vec3[map_width * map_height * 3]),
     current_pos({ 1.5f, 100.0f, 6.0f }),
     key_w(false), key_a(false), key_s(false), key_d(false), key_space(false), key_shift(false), wireframe(false), lighting(true),
