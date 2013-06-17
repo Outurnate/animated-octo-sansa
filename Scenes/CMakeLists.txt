@@ -1,4 +1,4 @@
-ADD_DEFINITIONS(-std=c++11)
+ADD_DEFINITIONS(-std=c++0x)
 INCLUDE(FindFreetype)
 add_library(Scenes TestScene.cpp Scene2D.cpp)
 include_directories(${OPENGL_INCLUDE_DIRS} ${OPENGL_glu_INCLUDE_DIRS} ${FTGL_INCLUDE_DIRS} ${ASSIMP_INCLUDE_DIRS} ${GLM_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS})
