@@ -3,6 +3,8 @@ compiler:
   - clang
   - gcc
 before_script:
+  - mkdir dep
+  - cd dep
   - curl -L http://sourceforge.net/projects/glfw/files/glfw/3.0.1/glfw-3.0.1.zip/download -o glfw-3.0.1.zip
   - unzip glfw-3.0.1.zip
   - sudo apt-get update
@@ -10,4 +12,5 @@ before_script:
   - cmake glfw-3.0.1
   - make
   - sudo make install
+  - cd ..
 script: cmake . && make
