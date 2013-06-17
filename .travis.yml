@@ -3,13 +3,18 @@ compiler:
   - clang
   - gcc
 before_script:
+  - sudo apt-get update
+  - sudo apt-get install cmake libglew-dev libftgl-dev libglm-dev libassimp-dev libglu-dev x11proto-xf86vidmode-dev xorg-dev
   - mkdir dep
   - cd dep
   - curl -L http://sourceforge.net/projects/glfw/files/glfw/3.0.1/glfw-3.0.1.zip/download -o glfw-3.0.1.zip
   - unzip glfw-3.0.1.zip
-  - sudo apt-get update
-  - sudo apt-get install cmake libglew-dev libftgl-dev libglm-dev libassimp-dev libglu-dev x11proto-xf86vidmode-dev xorg-dev
   - cmake glfw-3.0.1
+  - make
+  - sudo make install
+  - curl -L http://sourceforge.net/projects/ogl-math/files/glm-0.9.4.4/glm-0.9.4.4.zip/download -o glm-0.9.4.4.zip
+  - unzip glm-0.9.4.4.zip
+  - cmake glm-0.9.4.4
   - make
   - sudo make install
   - cd ..
