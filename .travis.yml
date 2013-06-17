@@ -5,6 +5,7 @@ compiler:
 before_script:
   - curl -L http://sourceforge.net/projects/glfw/files/glfw/3.0.1/glfw-3.0.1.zip/download -o glfw-3.0.1.zip
   - unzip glfw-3.0.1.zip
+  - sudo apt-get update
   - sudo apt-get install cmake libglew-dev libftgl-dev libglm-dev libassimp-dev libglu-dev x11proto-xf86vidmode-dev xorg-dev
   - cmake glfw-3.0.1
   - cd glfw-3.0.1
