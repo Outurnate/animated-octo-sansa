@@ -15,8 +15,6 @@ before_script:
   - curl -L http://sourceforge.net/projects/ogl-math/files/glm-0.9.4.4/glm-0.9.4.4.zip/download -o glm-0.9.4.4.zip
   - unzip glm-0.9.4.4.zip
   - cd glm-0.9.4.4
-  - cmake .
-  - make
-  - sudo make install
+  - cp glm /usr/include
   - cd ..
 script: cmake . && make
