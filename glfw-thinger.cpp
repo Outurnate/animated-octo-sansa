@@ -32,7 +32,7 @@ static void mouse(GLFWwindow* window, double x, double y)
 int main(void)
 {
   GLFWwindow* window;
-  scene = new Scene2D();//new TestScene(); // gotta make a picker soon
+  scene = /*new Scene2D();*/new TestScene(); // gotta make a picker soon
 
   glfwSetErrorCallback(error);
   if (!glfwInit())
