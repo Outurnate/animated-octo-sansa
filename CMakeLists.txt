@@ -10,7 +10,7 @@ find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 set (glfw-thinger_VERSION_MAJOR 1)
 set (glfw-thinger_VERSION_MINOR 0)
-ADD_DEFINITIONS(-std=c++11)
+ADD_DEFINITIONS(-std=c++0x)
 configure_file (
   "${PROJECT_SOURCE_DIR}/Config.h.in"
   "${PROJECT_BINARY_DIR}/Config.h"

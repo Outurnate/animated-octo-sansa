@@ -6,10 +6,9 @@
 *.lai
 *.la
 *.a
-PPC603gnu
 #*#
 *~
 .#*~
-.result
-.ucpp
 Makefile
+CMakeFiles
+CMakeCache.txt
