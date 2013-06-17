@@ -3,5 +3,9 @@ compiler:
   - clang
   - gcc
 before_script:
-  - sudo apt-get install cmake libglew-dev libftgl-dev libglm-dev libassimp-dev libglfw-dev
+  - curl -L http://sourceforge.net/projects/glfw/files/glfw/3.0.1/glfw-3.0.1.zip/download
+  - unzip glfw-3.0.1.zip
+  - sudo apt-get install cmake libglew-dev libftgl-dev libglm-dev libassimp-dev
+  - cmake glfw-3.0.1
+  - cd glfw-3.0.1 || { make && sudo make install } cd ..
 script: cmake . && make
