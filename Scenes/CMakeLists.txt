@@ -1,3 +1,6 @@
 ADD_DEFINITIONS(-std=c++0x)
+find_package(Freetype REQUIRED)
 add_library(Scenes TestScene.cpp Scene2D.cpp)
+include_directories("${PROJECT_SOURCE_DIR}")
+include_directories(${OPENGL_INCLUDE_DIRS} ${OPENGL_glu_INCLUDE_DIRS} ${GLEW_INCLUDE_PATH} ${FTGL_INCLUDE_DIRS} ${ASSIMP_INCLUDE_DIRS} ${GLM_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS})
 target_link_libraries(Scenes glfw ${FTGL_LIBRARIES} ${FREETYPE_LIBRARIES} ${GLFW_LIBRARIES} ${OPENGL_glu_LIBRARY} ${OPENGL_LIBRARIES} ${ASSIMP_LIBRARIES})
