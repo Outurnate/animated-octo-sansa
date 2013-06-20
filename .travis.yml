@@ -8,7 +8,7 @@ before_script:
   - curl -L http://sourceforge.net/projects/glfw/files/glfw/3.0.1/glfw-3.0.1.zip/download -o glfw-3.0.1.zip
   - unzip glfw-3.0.1.zip
   - cd glfw-3.0.1
-  - cmake .
+  - cmake -DBUILD_SHARED_LIBS=YES .
   - make
   - sudo make install
   - cd ..
