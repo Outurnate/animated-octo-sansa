@@ -1,10 +1,70 @@
 #include "TestScene.h"
 
+#include <fstream>
 #include <sstream>
-#include <string.h>
+#include <string>
 #include <iostream>
 #include <tgmath.h>
 #include <glm/gtc/noise.hpp>
+
+static inline void showShaderLog(GLuint object, PFNGLGETSHADERIVPROC glGet__iv, PFNGLGETSHADERINFOLOGPROC glGet__InfoLog)
+{
+    GLint length;
+    char *log;
+
+    glGet__iv(object, GL_INFO_LOG_LENGTH, &length);
+    log = (char*)malloc(length);
+    glGet__InfoLog(object, length, NULL, log);
+    fprintf(stderr, "%s", log);
+    free(log);
+}
+
+static inline GLuint makeShader(GLenum type, const char *filename)
+{
+  std::string contents;
+  std::ifstream in(filename, std::ios::in | std::ios::binary);
+  if (in)
+  {
+    in.seekg(0, std::ios::end);
+    contents.resize(in.tellg());
+    in.seekg(0, std::ios::beg);
+    in.read(&contents[0], contents.size());
+    in.close();
+  }
+  GLuint shader;
+  GLint sourceLength = contents.length(), status;
+  const char *source = contents.c_str();
+  shader = glCreateShader(type);
+  glShaderSource(shader, 1, &source, &sourceLength);
+  glCompileShader(shader);
+  glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
+  if (!status)
+  {
+    fprintf(stderr, "Failed to compile %s:\n", filename);
+    showShaderLog(shader, glGetShaderiv, glGetShaderInfoLog);
+    glDeleteShader(shader);
+    return 0;
+  }
+  return shader;
+}
+
+static inline GLuint makeProgram(GLuint vert, GLuint frag)
+{
+  GLint status;
+  GLuint program = glCreateProgram();
+  glAttachShader(program, vert);
+  glAttachShader(program, frag);
+  glLinkProgram(program);
+  glGetProgramiv(program, GL_COMPILE_STATUS, &status);
+  if (!status)
+  {
+    fprintf(stderr, "Failed to compile :\n");
+    showShaderLog(program, glGetProgramiv, glGetProgramInfoLog);
+    glDeleteProgram(program);
+    return 0;
+  }
+  return program;
+}
 
 TestScene::TestScene()
   : Scene(), map_width(128), map_height(128), map(new float[map_width * map_height]), map_normal(new glm::vec3[map_width * map_height * 3]),
@@ -28,7 +88,6 @@ TestScene::TestScene()
 TestScene::~TestScene()
 {
 }
-
 
 void TestScene::key(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
@@ -113,7 +172,7 @@ void TestScene::init(GLFWwindow* window)
   GLfloat ambient[]  = { 0.0f, 0.0f, 0.0f, 1.0f }; glLightfv(GL_LIGHT0, GL_AMBIENT,  ambient);
   GLfloat diffuse[]  = { 1.0f, 1.0f, 1.0f, 1.0f }; glLightfv(GL_LIGHT0, GL_DIFFUSE,  diffuse);
   GLfloat specular[] = { 1.0f, 1.0f, 1.0f, 1.0f }; glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
-  GLfloat position[] = { 100.0f, 100.0f, 0.0f, 1.0f }; glLightfv(GL_LIGHT0, GL_POSITION, position);
+  GLfloat position[] = { 100.0f, 100.0f, 100.0f, 1.0f }; glLightfv(GL_LIGHT0, GL_POSITION, position);
 
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
@@ -161,6 +220,10 @@ void TestScene::init(GLFWwindow* window)
   glGenBuffers(1, &map_ibo);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, map_ibo);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicies_map), indicies_map, GL_STATIC_DRAW);
+
+  terrain_vert = makeShader(GL_VERTEX_SHADER, "Media/Shaders/basic.vert");
+  terrain_frag = makeShader(GL_FRAGMENT_SHADER, "Media/Shaders/basic.frag");
+  terrain_prog = makeProgram(terrain_vert, terrain_frag);
 }
 
 void TestScene::render(GLFWwindow* window, double delta, int width, int height)
@@ -190,6 +253,8 @@ void TestScene::render(GLFWwindow* window, double delta, int width, int height)
 
   float ar = (float)width / (float)height;
 
+  glUseProgram(terrain_prog);
+
   glViewport(0, 0, width, height);
 
   glMatrixMode(GL_PROJECTION);
@@ -202,7 +267,7 @@ void TestScene::render(GLFWwindow* window, double delta, int width, int height)
 
   glClearColor(0.0, 0.0, 0.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glColor3d(1.0, 1.0, 0.0);
+  glColor3d(1.0, 0.0, 0.0);
 
   glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
 
@@ -229,6 +294,7 @@ void TestScene::render(GLFWwindow* window, double delta, int width, int height)
   glDrawElements(GL_TRIANGLES, n_indicies_map, GL_UNSIGNED_SHORT, NULL);
   glDisableClientState(GL_VERTEX_ARRAY);
 
+  glUseProgram(0);
   glDisable(GL_COLOR_MATERIAL);
   glDisable(GL_LIGHTING);
 

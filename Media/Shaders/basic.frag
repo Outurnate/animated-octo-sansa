@@ -5,7 +5,7 @@ varying vec3 vertex_normal;
 
 void main()
 {
-	vec3 light = normalize(gl_LightSource[0].position.xyz - vertex_view);
+	vec3 light = normalize(vec3(gl_ModelViewMatrix * gl_LightSource[0].position) - vertex_view);
 
 	gl_FragColor =
 		gl_FrontLightModelProduct.sceneColor
