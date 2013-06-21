@@ -6,6 +6,8 @@
 #include <iostream>
 #include <tgmath.h>
 #include <glm/gtc/noise.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 static inline void showShaderLog(GLuint object, PFNGLGETSHADERIVPROC glGet__iv, PFNGLGETSHADERINFOLOGPROC glGet__InfoLog)
 {
@@ -172,7 +174,6 @@ void TestScene::init(GLFWwindow* window)
   GLfloat ambient[]  = { 0.0f, 0.0f, 0.0f, 1.0f }; glLightfv(GL_LIGHT0, GL_AMBIENT,  ambient);
   GLfloat diffuse[]  = { 1.0f, 1.0f, 1.0f, 1.0f }; glLightfv(GL_LIGHT0, GL_DIFFUSE,  diffuse);
   GLfloat specular[] = { 1.0f, 1.0f, 1.0f, 1.0f }; glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
-  GLfloat position[] = { 100.0f, 100.0f, 100.0f, 1.0f }; glLightfv(GL_LIGHT0, GL_POSITION, position);
 
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
@@ -276,9 +277,33 @@ void TestScene::render(GLFWwindow* window, double delta, int width, int height)
   point3f right({ (float)sin(dx - (M_PI / 2.0f)), 0.0f, (float)cos(dx - (M_PI / 2.0f)) });
   point3f up({ (float)((right.y * dir.z) - (right.z * dir.y)), (float)((right.z * dir.x) - (right.x * dir.z)), (float)((right.x * dir.y) - (right.y * dir.x)) });
 
-  gluLookAt(current_pos.x,         current_pos.y,         current_pos.z,
-	    current_pos.x + dir.x, current_pos.y + dir.y, current_pos.z + dir.z,
-	    up.x,                  up.y,                  up.z);
+  glm::mat4 model =
+    glm::lookAt(glm::vec3(current_pos.x,         current_pos.y,         current_pos.z),
+		glm::vec3(current_pos.x + dir.x, current_pos.y + dir.y, current_pos.z + dir.z),
+		glm::vec3(up.x,                  up.y,                  up.z));
+  GLfloat fmodel[16] =
+    {
+      model[0][0],
+      model[0][1],
+      model[0][2],
+      model[0][3],
+
+      model[1][0],
+      model[1][1],
+      model[1][2],
+      model[1][3],
+
+      model[2][0],
+      model[2][1],
+      model[2][2],
+      model[2][3],
+
+      model[3][0],
+      model[3][1],
+      model[3][2],
+      model[3][3]
+    };
+  glMultMatrixf(fmodel);
 
   if (lighting)
   {

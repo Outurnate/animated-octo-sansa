@@ -4,8 +4,8 @@
 #define GLFW_INCLUDE_GLU
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
 #include <FTGL/ftgl.h>
+#include <glm/glm.hpp>
 
 #include "Scene.h"
 
