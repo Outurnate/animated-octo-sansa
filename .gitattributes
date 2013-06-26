@@ -1,2 +1,3 @@
 Media binary
-Media/Shaders text
+Media/Shaders text=auto
+Media/*.sh text=auto
