@@ -76,7 +76,7 @@ TestScene::TestScene()
 {
   for(unsigned x = 0; x < map_width; ++x)
     for(unsigned y = 0; y < map_height; ++y)
-      map[(y * map_width) + x] = (glm::simplex(glm::vec4(x / 8.0f, y / 8.0f, 0.5f, 0.5f)) * 10.0f) + (glm::simplex(glm::vec4(x / 32.0f, y / 32.0f, 0.5f, 0.5f)) * 100.0f);
+      map[(y * map_width) + x] = glm::simplex(glm::vec4(x / 16.0f, y / 16.0f, 0.5f, 0.5f)) * 64.0f + 64.0f;
   unsigned i = 0;
   for(unsigned x = 0; x < map_width; ++x)
     for(unsigned y = 0; y < map_height; ++y)
@@ -303,6 +303,8 @@ void TestScene::render(GLFWwindow* window, double delta, int width, int height)
       model[3][2],
       model[3][3]
     };
+  /*for (unsigned i = 0; i < 16; ++i)
+    printf("%d,", fmodel[i]);*/
   glMultMatrixf(fmodel);
 
   if (lighting)
