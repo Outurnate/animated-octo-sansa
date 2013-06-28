@@ -68,6 +68,18 @@ static inline GLuint makeProgram(GLuint vert, GLuint frag)
   return program;
 }
 
+static inline GLuint loadTexture(const char* fname)
+{
+  GLuint tex;
+  glGenTextures(1, &tex);
+  glBindTexture(GL_TEXTURE_2D, tex);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glfwLoadTexture2D(fname, GLFW_BUILD_MIPMAPS_BIT);
+}
+
 TestScene::TestScene()
   : Scene(), map_width(128), map_height(128), map(new float[map_width * map_height]), map_normal(new glm::vec3[map_width * map_height * 3]),
     current_pos({ 1.5f, 100.0f, 6.0f }),
@@ -87,9 +99,7 @@ TestScene::TestScene()
       ((y == (map_height - 1)) ? glm::vec3(x, map[(y * map_width) + x], y) : glm::vec3(x,     map[((y + 1) * map_width) + x],    y + 1))));
 }
 
-TestScene::~TestScene()
-{
-}
+TestScene::~TestScene() { }
 
 void TestScene::key(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
@@ -158,6 +168,7 @@ void TestScene::destroy(GLFWwindow* window)
 {
   glDeleteBuffers(1, &map_vbo);
   glDeleteBuffers(1, &map_ibo);
+  glDeleteTextures(1, &tex_grass_diffuse);
 }
 
 void TestScene::init(GLFWwindow* window)
@@ -180,7 +191,7 @@ void TestScene::init(GLFWwindow* window)
   GLfloat verticies_map[n_verticies_map];
   GLushort indicies_map[n_indicies_map];
 
-  // TODO: mixmap
+  tex_grass_diffuse = loadTexture("Media/Textures/Grass_Diffuse.tga");
 
   unsigned i = 0;
   for(unsigned x = 0; x < map_width; ++x)

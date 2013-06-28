@@ -19,7 +19,7 @@ private:
   glm::vec3* map_normal;
   point3f current_pos;
   bool key_w, key_a, key_s, key_d, key_space, key_shift, wireframe, lighting;
-  GLuint map_vbo, map_ibo, terrain_vert, terrain_frag, terrain_prog;
+  GLuint map_vbo, map_ibo, terrain_vert, terrain_frag, terrain_prog, tex_grass_diffuse;
   size_t n_verticies_map;
   size_t n_indicies_map;
   double dx, dy;
