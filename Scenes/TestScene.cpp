@@ -76,7 +76,7 @@ TestScene::TestScene()
 {
   for(unsigned x = 0; x < map_width; ++x)
     for(unsigned y = 0; y < map_height; ++y)
-      map[(y * map_width) + x] = glm::simplex(glm::vec4(x / 16.0f, y / 16.0f, 0.5f, 0.5f)) * 64.0f + 64.0f;
+      map[(y * map_width) + x] = (glm::simplex(glm::vec4(x / 16.0f, y / 16.0f, 0.5f, 0.5f)) * 64.0f) + 64.0f;
   unsigned i = 0;
   for(unsigned x = 0; x < map_width; ++x)
     for(unsigned y = 0; y < map_height; ++y)
