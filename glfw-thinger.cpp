@@ -6,6 +6,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include <IL/il.h>
+
 #include "Scene.h"
 #include "TestScene.h"
 #include "Scene2D.h"
@@ -50,6 +52,12 @@ int main(void)
 
   glewExperimental = GL_TRUE;
   glewInit();
+  if (ilGetInteger(IL_VERSION_NUM) < IL_VERSION)
+  {
+    glfwTerminate();
+    return EXIT_FAILURE;
+  }
+  ilInit();
   scene->init(window);
   while(!glfwWindowShouldClose(window))
   {

@@ -8,6 +8,7 @@
 #include <glm/gtc/noise.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <IL/il.h>
 
 static inline void showShaderLog(GLuint object, PFNGLGETSHADERIVPROC glGet__iv, PFNGLGETSHADERINFOLOGPROC glGet__InfoLog)
 {
@@ -68,27 +69,37 @@ static inline GLuint makeProgram(GLuint vert, GLuint frag)
   return program;
 }
 
-static inline GLuint loadTexture(const char* fname)
+static inline GLuint loadTexture(const char* fname, bool alpha = false)
 {
   GLuint tex;
+  ILuint texil;
   glGenTextures(1, &tex);
   glBindTexture(GL_TEXTURE_2D, tex);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  glfwLoadTexture2D(fname, GLFW_BUILD_MIPMAPS_BIT);
+  ilGenImages(1, &texil);
+  ilBindImage(texil);
+  if (ilLoadImage((const ILstring)fname)
+      && ilConvertImage(alpha ? IL_RGBA : IL_RGB, IL_UNSIGNED_BYTE))
+    gluBuild2DMipmaps(GL_TEXTURE_2D, ilGetInteger(IL_IMAGE_BPP),
+		      ilGetInteger(IL_IMAGE_WIDTH), ilGetInteger(IL_IMAGE_HEIGHT),
+		      ilGetInteger(IL_IMAGE_FORMAT), GL_UNSIGNED_BYTE, ilGetData());
+  ilDeleteImages(1, &texil);
+
+  return tex;
 }
 
 TestScene::TestScene()
-  : Scene(), map_width(128), map_height(128), map(new float[map_width * map_height]), map_normal(new glm::vec3[map_width * map_height * 3]),
+  : Scene(), map_width(256), map_height(256), map(new float[map_width * map_height]), map_normal(new glm::vec3[map_width * map_height * 3]),
     current_pos({ 1.5f, 100.0f, 6.0f }),
     key_w(false), key_a(false), key_s(false), key_d(false), key_space(false), key_shift(false), wireframe(false), lighting(true),
-    n_verticies_map(map_width * map_height * 12), n_indicies_map(map_width * map_height * 6), font_AverageMono("AverageMono.ttf")
+    n_verticies_map(map_width * map_height * 10), n_indicies_map(map_width * map_height * 6), font_AverageMono("AverageMono.ttf")
 {
   for(unsigned x = 0; x < map_width; ++x)
     for(unsigned y = 0; y < map_height; ++y)
-      map[(y * map_width) + x] = (glm::simplex(glm::vec4(x / 16.0f, y / 16.0f, 0.5f, 0.5f)) * 64.0f) + 64.0f;
+      map[(y * map_width) + x] = (glm::simplex(glm::vec4(x / 64.0f, y / 64.0f, 0.5f, 0.5f)) * 64.0f) + 64.0f;
   unsigned i = 0;
   for(unsigned x = 0; x < map_width; ++x)
     for(unsigned y = 0; y < map_height; ++y)
@@ -191,24 +202,36 @@ void TestScene::init(GLFWwindow* window)
   GLfloat verticies_map[n_verticies_map];
   GLushort indicies_map[n_indicies_map];
 
+  terrain_vert = makeShader(GL_VERTEX_SHADER, "Media/Shaders/basic.vert");
+  terrain_frag = makeShader(GL_FRAGMENT_SHADER, "Media/Shaders/basic.frag");
+  terrain_prog = makeProgram(terrain_vert, terrain_frag);
+  glUseProgram(terrain_prog);
+
+  GLint lower_diffuse = glGetUniformLocation(terrain_prog, "lower_diffuse");
+
   tex_grass_diffuse = loadTexture("Media/Textures/Grass_Diffuse.tga");
+
+  glUniform1i(lower_diffuse, 0);
+  glActiveTexture(GL_TEXTURE0 + 0);
+  glBindTexture(GL_TEXTURE_2D, tex_grass_diffuse);
+
+  /*glActiveTexture(GL_TEXTURE0 + 1);
+  glBindTexture(GL_TEXTURE_2D, t2);*/
 
   unsigned i = 0;
   for(unsigned x = 0; x < map_width; ++x)
     for(unsigned y = 0; y < map_height; ++y)
     {
-      verticies_map[i++] = x * 10;
-      verticies_map[i++] = map[(y * map_width) + x];
-      verticies_map[i++] = y * 10;
-      verticies_map[i++] = map_normal[(y * map_width) + x].x;
-      verticies_map[i++] = map_normal[(y * map_width) + x].y;
-      verticies_map[i++] = map_normal[(y * map_width) + x].z;
+      verticies_map[i++] = x; // X
+      verticies_map[i++] = map[(y * map_width) + x]; // Y
+      verticies_map[i++] = y; // Z
+      verticies_map[i++] = map_normal[(y * map_width) + x].x; // NX
+      verticies_map[i++] = map_normal[(y * map_width) + x].y; // NY
+      verticies_map[i++] = map_normal[(y * map_width) + x].z; // NZ
       verticies_map[i++] = 0; // R
       verticies_map[i++] = 0; // G
       verticies_map[i++] = 0; // B
       verticies_map[i++] = 0; // A
-      verticies_map[i++] = 0; // S
-      verticies_map[i++] = 0; // T
     }
 
   i = 0;
@@ -226,16 +249,12 @@ void TestScene::init(GLFWwindow* window)
   glGenBuffers(1, &map_vbo);
   glBindBuffer(GL_ARRAY_BUFFER, map_vbo);
   glBufferData(GL_ARRAY_BUFFER, sizeof(verticies_map), verticies_map, GL_STATIC_DRAW);
-  glVertexPointer(3, GL_FLOAT, 12 * sizeof(GLfloat), (GLvoid*)0);
-  glNormalPointer(GL_FLOAT, 12 * sizeof(GLfloat), (GLvoid*)3);
+  glVertexPointer(3, GL_FLOAT, 10 * sizeof(GLfloat), (GLvoid*)0);
+  glNormalPointer(GL_FLOAT, 10 * sizeof(GLfloat), (GLvoid*)3);
 
   glGenBuffers(1, &map_ibo);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, map_ibo);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicies_map), indicies_map, GL_STATIC_DRAW);
-
-  terrain_vert = makeShader(GL_VERTEX_SHADER, "Media/Shaders/basic.vert");
-  terrain_frag = makeShader(GL_FRAGMENT_SHADER, "Media/Shaders/basic.frag");
-  terrain_prog = makeProgram(terrain_vert, terrain_frag);
 }
 
 void TestScene::render(GLFWwindow* window, double delta, int width, int height)
@@ -321,9 +340,7 @@ void TestScene::render(GLFWwindow* window, double delta, int width, int height)
   if (lighting)
   {
     glEnable(GL_LIGHTING);
-    glEnable(GL_COLOR_MATERIAL);
     glEnable(GL_LIGHT0);
-    glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
   }
 
   glEnableClientState(GL_VERTEX_ARRAY);
@@ -333,7 +350,6 @@ void TestScene::render(GLFWwindow* window, double delta, int width, int height)
   glDisableClientState(GL_VERTEX_ARRAY);
 
   glUseProgram(0);
-  glDisable(GL_COLOR_MATERIAL);
   glDisable(GL_LIGHTING);
 
   glPixelTransferf(GL_RED_BIAS,  -1.0f);
