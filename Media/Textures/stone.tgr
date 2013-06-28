@@ -1,16 +1,33 @@
 #NTEVersion 6
-#BeginNodes 3
-506 303 0
+#BeginNodes 7
+640 112 0
 engine.graphics.synthesis.texture.PatternPerlinNoise
-ExportName "" Transformation 1.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 1.0 Color_Mapping 6 1.0 1.0 1.0 1.0 0.004830918 0.9150944 0.9150944 0.9150944 1.0 0.048309177 0.8 0.8 0.8 1.0 0.42512077 0.0 0.0 0.0 1.0 0.5169082 0.8 0.8 0.8 1.0 0.6086956 1.0 1.0 1.0 1.0 1.0 ScaleX 1.0 ScaleY 1.0 ValueScale 1.0 Persistence 0.4375 Spectral_Control 9 0.5 1.0 0.4375 0.19140625 0.083740234 0.036636353 0.016028404 0.007012427 0.0030679367 StartBand 1 EndBand 8 Seed -1 Periodic true endparameters
-698 282 0
+ExportName "" Transformation 1.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 1.0 Color_Mapping 6 0.34901962 0.29803923 0.2627451 1.0 0.0 0.42352942 0.39607844 0.3529412 1.0 0.17391305 0.006127451 0.006127451 0.006127451 1.0 0.352657 0.18998075 0.16630016 0.11761947 1.0 0.6231884 0.36862746 0.3529412 0.32156864 1.0 0.79227054 0.5764706 0.5411765 0.5019608 1.0 0.9951691 ScaleX 7.0 ScaleY 5.0 ValueScale 1.0 Persistence 0.8 Spectral_Control 9 0.5 1.0 0.8 0.64000005 0.512 0.40960002 0.32768002 0.26214403 0.20971523 StartBand 1 EndBand 8 Seed 1 Periodic true endparameters
+785 110 0
 engine.graphics.synthesis.texture.PatternPerlinNoise
-ExportName "" Transformation 1.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 1.0 Color_Mapping 2 0.0 0.0 0.0 1.0 0.0 1.0 1.0 1.0 1.0 1.0 ScaleX 1.0 ScaleY 1.0 ValueScale 1.0 Persistence 0.5 Spectral_Control 9 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 StartBand 1 EndBand 8 Seed -1 Periodic true endparameters
-710 448 0
-engine.graphics.synthesis.texture.FilterColorize
-ExportName "" Gray_to_Color_Mapping 4 0.69803923 0.72156864 0.654902 1.0 0.0 0.67058825 0.64705884 0.5568628 1.0 0.13043478 0.5058824 0.50980395 0.44313726 1.0 0.3236715 0.15294118 0.18039216 0.15686275 1.0 1.0 endparameters
+ExportName "" Transformation 1.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 1.0 Color_Mapping 6 0.5764706 0.5411765 0.5019608 1.0 0.004830897 0.36862746 0.3529412 0.32156864 1.0 0.20772946 0.18998075 0.16630016 0.11761947 1.0 0.37681162 0.006127451 0.006127451 0.006127451 1.0 0.64734304 0.42352942 0.39607844 0.3529412 1.0 0.82608694 0.34901962 0.29803923 0.2627451 1.0 1.0 ScaleX 4.0 ScaleY 5.0 ValueScale 1.0 Persistence 0.8125 Spectral_Control 9 0.5 1.0 0.8125 0.66015625 0.53637695 0.43580627 0.3540926 0.28770024 0.23375644 StartBand 1 EndBand 8 Seed 22 Periodic true endparameters
+770 288 0
+engine.graphics.synthesis.texture.FilterMask
+ExportName "" Invert true endparameters
+911 122 0
+engine.graphics.synthesis.texture.PatternPerlinNoise
+ExportName "Stone_Height" Transformation 1.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 1.0 Color_Mapping 2 0.0 0.0 0.0 1.0 0.0 1.0 1.0 1.0 1.0 1.0 ScaleX 16.0 ScaleY 16.0 ValueScale 1.0 Persistence 1.025 Spectral_Control 12 0.5 0.5 1.0 1.025 1.050625 1.0768906 1.1038128 1.1314081 1.1596932 1.1886855 1.2184026 1.2488626 StartBand 2 EndBand 11 Seed 23 Periodic true endparameters
+957 357 0
+engine.graphics.synthesis.texture.FilterEmboss
+ExportName "Stone_Diffuse" Strength 0.5 Angle 45.0 endparameters
+1046 264 0
+engine.graphics.synthesis.texture.FilterNormalMap
+ExportName "Stone_Normal" Strength 1.0 endparameters
+1089 65 0
+engine.graphics.synthesis.texture.PatternConstantColor
+ExportName "Stone_Specular" Transformation 1.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 1.0 Color 0.2 0.2 0.2 endparameters
 #EndNodes
-#BeginConnections 1
-1 2 0
+#BeginConnections 6
+3 2 2
+2 4 0
+3 4 1
+0 2 0
+1 2 1
+3 5 0
 #EndConnections
-glpreview -1 -1 -1 -1 Object 1 Spec._Power 20.0 POM_Strength 0.25 Ambient 0.25 TexScale_U 1 TexScale_V 1 CamRotX 41.0 CamRotY 193.0 CamDist 3.1999993 endglpreview
+glpreview 4 5 6 6 Object 1 Spec._Power 20.0 POM_Strength 0.25 Ambient 0.25 TexScale_U 1 TexScale_V 1 CamRotX 47.0 CamRotY 48.0 CamDist 1.8999995 endglpreview

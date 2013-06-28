@@ -207,16 +207,25 @@ void TestScene::init(GLFWwindow* window)
   terrain_prog = makeProgram(terrain_vert, terrain_frag);
   glUseProgram(terrain_prog);
 
-  GLint lower_diffuse = glGetUniformLocation(terrain_prog, "lower_diffuse");
+  GLint lower_diffuse  = glGetUniformLocation(terrain_prog, "lower_diffuse");
+  GLint middle_diffuse = glGetUniformLocation(terrain_prog, "middle_diffuse");
+  GLint upper_diffuse  = glGetUniformLocation(terrain_prog, "upper_diffuse");
 
+  tex_dirt_diffuse  = loadTexture("Media/Textures/Grass_Diffuse.tga");
   tex_grass_diffuse = loadTexture("Media/Textures/Grass_Diffuse.tga");
+  tex_stone_diffuse = loadTexture("Media/Textures/Stone_Diffuse.tga");
 
   glUniform1i(lower_diffuse, 0);
   glActiveTexture(GL_TEXTURE0 + 0);
+  glBindTexture(GL_TEXTURE_2D, tex_dirt_diffuse);
+
+  glUniform1i(middle_diffuse, 1);
+  glActiveTexture(GL_TEXTURE0 + 1);
   glBindTexture(GL_TEXTURE_2D, tex_grass_diffuse);
 
-  /*glActiveTexture(GL_TEXTURE0 + 1);
-  glBindTexture(GL_TEXTURE_2D, t2);*/
+  glUniform1i(upper_diffuse, 1);
+  glActiveTexture(GL_TEXTURE0 + 2);
+  glBindTexture(GL_TEXTURE_2D, tex_stone_diffuse);
 
   unsigned i = 0;
   for(unsigned x = 0; x < map_width; ++x)

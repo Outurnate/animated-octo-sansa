@@ -1,6 +1,8 @@
 #version 130
 
 uniform sampler2D lower_diffuse;
+uniform sampler2D middle_diffuse;
+uniform sampler2D upper_diffuse;
 
 varying vec3 vertex_view;
 varying vec3 vertex_normal;
@@ -22,7 +24,9 @@ void main()
   * float(BLOCK_ZONE((LOWER_BAND - BAND_BREADTH), (LOWER_BAND + BAND_BREADTH), pos.y))) + 
   (mix(vec3(0, 1, 0), vec3(0, 0, 1), (clamp(pos.y, (UPPER_BAND - BAND_BREADTH), (UPPER_BAND + BAND_BREADTH)) - (UPPER_BAND - BAND_BREADTH)) / ((UPPER_BAND + BAND_BREADTH) - (UPPER_BAND - BAND_BREADTH)))
   * float(BLOCK_ZONE((UPPER_BAND - BAND_BREADTH), (UPPER_BAND + BAND_BREADTH), pos.y)));
-  vec3 final_col = texture2D(lower_diffuse, pos.xz).rgb * terr_type.x;
+  vec3 final_col = texture2D(lower_diffuse,  pos.xz).rgb * terr_type.x
+       		 + texture2D(middle_diffuse, pos.xz).rgb * terr_type.y
+		 + texture2D(upper_diffuse,  pos.xz).rgb * terr_type.z;
   vec4 ambient        = vec4(final_col.x * .1, final_col.y * .1, final_col.z * .1, 1);
   vec4 diffuse        = vec4(final_col.x, final_col.y, final_col.z, 1);
   vec4 specular       = vec4(0, 0, 0, 1);
