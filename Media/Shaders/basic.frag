@@ -4,8 +4,6 @@ uniform sampler2D lower_diffuse;
 uniform sampler2D middle_diffuse;
 uniform sampler2D upper_diffuse;
 
-varying vec3 vertex_view;
-varying vec3 vertex_normal;
 varying vec3 pos;
 
 #define LOWER_BAND 42
@@ -31,11 +29,5 @@ void main()
   vec4 ambient        = diffuse * .1;
   vec4 specular       = diffuse * .25;
 
-  vec3 light = normalize(gl_LightSource[0].position.xyz - vertex_view);
-
-  gl_FragColor =
-  	       gl_FrontLightModelProduct.sceneColor
-	     + ambient
-	     + clamp(diffuse * max(dot(vertex_normal, light), 0.0), 0.0, 1.0)
-	     + clamp(specular * pow(max(dot(normalize(-reflect(light, vertex_normal)), normalize(-vertex_view)), 0.0), 0.3 * gl_FrontMaterial.shininess), 0.0, 1.0);
+  gl_FragColor = diffuse;
 }
