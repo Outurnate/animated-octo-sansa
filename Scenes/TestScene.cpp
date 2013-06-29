@@ -86,6 +86,8 @@ static inline GLuint loadTexture(const char* fname, bool alpha = false)
     gluBuild2DMipmaps(GL_TEXTURE_2D, ilGetInteger(IL_IMAGE_BPP),
 		      ilGetInteger(IL_IMAGE_WIDTH), ilGetInteger(IL_IMAGE_HEIGHT),
 		      ilGetInteger(IL_IMAGE_FORMAT), GL_UNSIGNED_BYTE, ilGetData());
+  else
+    fprintf(stderr, "Failed to load texture: %s\n", fname);
   ilDeleteImages(1, &texil);
 
   return tex;
@@ -211,7 +213,7 @@ void TestScene::init(GLFWwindow* window)
   GLint middle_diffuse = glGetUniformLocation(terrain_prog, "middle_diffuse");
   GLint upper_diffuse  = glGetUniformLocation(terrain_prog, "upper_diffuse");
 
-  tex_dirt_diffuse  = loadTexture("Media/Textures/Grass_Diffuse.tga");
+  tex_dirt_diffuse  = loadTexture("Media/Textures/Dirt_Diffuse.tga");
   tex_grass_diffuse = loadTexture("Media/Textures/Grass_Diffuse.tga");
   tex_stone_diffuse = loadTexture("Media/Textures/Stone_Diffuse.tga");
 
@@ -223,7 +225,7 @@ void TestScene::init(GLFWwindow* window)
   glActiveTexture(GL_TEXTURE0 + 1);
   glBindTexture(GL_TEXTURE_2D, tex_grass_diffuse);
 
-  glUniform1i(upper_diffuse, 1);
+  glUniform1i(upper_diffuse, 2);
   glActiveTexture(GL_TEXTURE0 + 2);
   glBindTexture(GL_TEXTURE_2D, tex_stone_diffuse);
 
