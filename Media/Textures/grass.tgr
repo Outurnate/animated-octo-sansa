@@ -1,8 +1,8 @@
 #NTEVersion 6
-#BeginNodes 9
+#BeginNodes 18
 778 137 0
 engine.graphics.synthesis.texture.PatternPerlinNoise
-ExportName "" Transformation 1.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 1.0 Color_Mapping 2 0.0 0.0 0.0 1.0 0.30917874 1.0 1.0 1.0 1.0 1.0 ScaleX 1.0 ScaleY 1.0 ValueScale 1.0 Persistence 0.75 Spectral_Control 9 0.5 1.0 0.75 0.5625 0.421875 0.31640625 0.23730469 0.17797852 0.13348389 StartBand 1 EndBand 8 Seed -1 Periodic true endparameters
+ExportName "" Transformation 1.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 1.0 Color_Mapping 2 0.0 0.0 0.0 1.0 0.30917874 1.0 1.0 1.0 1.0 1.0 ScaleX 1.0 ScaleY 1.0 ValueScale 1.0 Persistence 0.75 Spectral_Control 9 0.5 1.0 0.75 0.5625 0.421875 0.31640625 0.23730469 0.17797852 0.13348389 StartBand 1 EndBand 8 Seed 0 Periodic true endparameters
 455 139 0
 engine.graphics.synthesis.texture.PatternConstantColor
 ExportName "" Transformation 1.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 1.0 Color 0.0 0.3372549 0.0 endparameters
@@ -17,18 +17,45 @@ engine.graphics.synthesis.texture.FilterBlur
 ExportName "" Radius 3.5 #_Samples 64 Weight 0 Anisotropy 0.0 Angle 0.0 endparameters
 789 273 0
 engine.graphics.synthesis.texture.FilterNormalMap
-ExportName "Grass_Normal" Strength 1.75 endparameters
+ExportName "Grass_A_Normal" Strength 1.75 endparameters
 455 271 0
 engine.graphics.synthesis.texture.PatternConstantColor
-ExportName "Grass_Specular" Transformation 1.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 1.0 Color 0.078431375 0.078431375 0.078431375 endparameters
+ExportName "Grass_A_Specular" Transformation 1.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 1.0 Color 0.078431375 0.078431375 0.078431375 endparameters
 455 397 0
 engine.graphics.synthesis.texture.PatternPerlinNoise
-ExportName "Grass_Height" Transformation 1.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 1.0 Color_Mapping 2 0.0 0.0 0.0 1.0 0.0 1.0 1.0 1.0 1.0 1.0 ScaleX 1.0 ScaleY 1.0 ValueScale 1.0 Persistence 0.75 Spectral_Control 9 0.0 1.0 0.75 0.5625 0.421875 0.31640625 0.23730469 0.17797852 0.13348389 StartBand 1 EndBand 8 Seed -1 Periodic true endparameters
+ExportName "Grass_A_Height" Transformation 1.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 1.0 Color_Mapping 2 0.0 0.0 0.0 1.0 0.0 1.0 1.0 1.0 1.0 1.0 ScaleX 1.0 ScaleY 1.0 ValueScale 1.0 Persistence 0.75 Spectral_Control 9 0.0 1.0 0.75 0.5625 0.421875 0.31640625 0.23730469 0.17797852 0.13348389 StartBand 1 EndBand 8 Seed 0 Periodic true endparameters
 785 567 0
 engine.graphics.synthesis.texture.FilterBlend
-ExportName "Grass_Diffuse" Layer_Func. 5 Opacity 1.0 Inv._Alpha false endparameters
+ExportName "Grass_A_Diffuse" Layer_Func. 5 Opacity 1.0 Inv._Alpha false endparameters
+943 145 0
+engine.graphics.synthesis.texture.PatternConstantColor
+ExportName "" Transformation 1.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 1.0 Color 0.0 0.3372549 0.0 endparameters
+1059 141 0
+engine.graphics.synthesis.texture.PatternConstantColor
+ExportName "" Transformation 1.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 1.0 Color 0.5686275 0.3019608 0.0 endparameters
+1213 139 0
+engine.graphics.synthesis.texture.PatternPerlinNoise
+ExportName "" Transformation 1.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 1.0 Color_Mapping 2 0.0 0.0 0.0 1.0 0.30917874 1.0 1.0 1.0 1.0 1.0 ScaleX 1.0 ScaleY 1.0 ValueScale 1.0 Persistence 0.75 Spectral_Control 9 0.5 1.0 0.75 0.5625 0.421875 0.31640625 0.23730469 0.17797852 0.13348389 StartBand 1 EndBand 8 Seed 2 Periodic true endparameters
+943 281 0
+engine.graphics.synthesis.texture.PatternConstantColor
+ExportName "Grass_B_Specular" Transformation 1.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 1.0 Color 0.078431375 0.078431375 0.078431375 endparameters
+1079 271 0
+engine.graphics.synthesis.texture.FilterMask
+ExportName "" Invert false endparameters
+1213 278 0
+engine.graphics.synthesis.texture.FilterNormalMap
+ExportName "Grass_B_Normal" Strength 1.75 endparameters
+939 407 0
+engine.graphics.synthesis.texture.PatternPerlinNoise
+ExportName "Grass_B_Height" Transformation 1.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 1.0 Color_Mapping 2 0.0 0.0 0.0 1.0 0.0 1.0 1.0 1.0 1.0 1.0 ScaleX 1.0 ScaleY 1.0 ValueScale 1.0 Persistence 0.75 Spectral_Control 9 0.0 1.0 0.75 0.5625 0.421875 0.31640625 0.23730469 0.17797852 0.13348389 StartBand 1 EndBand 8 Seed 2 Periodic true endparameters
+1086 406 0
+engine.graphics.synthesis.texture.FilterBlur
+ExportName "" Radius 3.5 #_Samples 64 Weight 0 Anisotropy 0.0 Angle 0.0 endparameters
+1142 564 0
+engine.graphics.synthesis.texture.FilterBlend
+ExportName "Grass_B_Diffuse" Layer_Func. 5 Opacity 1.0 Inv._Alpha false endparameters
 #EndNodes
-#BeginConnections 7
+#BeginConnections 14
 0 2 2
 1 2 0
 3 2 1
@@ -36,5 +63,12 @@ ExportName "Grass_Diffuse" Layer_Func. 5 Opacity 1.0 Inv._Alpha false endparamet
 4 8 0
 7 8 1
 0 5 0
+9 13 0
+10 13 1
+11 13 2
+11 14 0
+13 16 0
+15 17 1
+16 17 0
 #EndConnections
 glpreview 8 5 6 -1 Object 1 Spec._Power 40.0 POM_Strength 1.0 Ambient 0.25 TexScale_U 1 TexScale_V 1 CamRotX 50.0 CamRotY 243.0 CamDist 3.1999993 endglpreview
