@@ -22,18 +22,27 @@ static inline void showShaderLog(GLuint object, PFNGLGETSHADERIVPROC glGet__iv, 
     free(log);
 }
 
-static inline GLuint makeShader(GLenum type, const char *filename)
+static inline GLuint makeShader(GLenum type, unsigned num, std::string fnames[])
 {
   std::string contents;
-  std::ifstream in(filename, std::ios::in | std::ios::binary);
-  if (in)
+  for (unsigned i = 0; i < num; ++i)
   {
-    in.seekg(0, std::ios::end);
-    contents.resize(in.tellg());
-    in.seekg(0, std::ios::beg);
-    in.read(&contents[0], contents.size());
-    in.close();
+    std::ifstream in(fnames[i], std::ios::in | std::ios::binary);
+    if (in)
+    {
+      in.seekg(0, std::ios::end);
+      size_t fsize = in.tellg();
+      size_t osize = contents.size();
+      contents.resize(osize + fsize);
+      in.seekg(0, std::ios::beg);
+      in.read(&contents[0] + osize, fsize);
+      in.close();
+    }
   }
+  std::ofstream tempfile("temp.glsl");
+  if (tempfile.is_open())
+    tempfile << contents;
+  tempfile.close();
   GLuint shader;
   GLint sourceLength = contents.length(), status;
   const char *source = contents.c_str();
@@ -43,7 +52,7 @@ static inline GLuint makeShader(GLenum type, const char *filename)
   glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
   if (!status)
   {
-    fprintf(stderr, "Failed to compile %s:\n", filename);
+    fprintf(stderr, "Failed to compile %s:\n", fnames[0].c_str());
     showShaderLog(shader, glGetShaderiv, glGetShaderInfoLog);
     glDeleteShader(shader);
     return 0;
@@ -181,7 +190,10 @@ void TestScene::destroy(GLFWwindow* window)
 {
   glDeleteBuffers(1, &map_vbo);
   glDeleteBuffers(1, &map_ibo);
-  glDeleteTextures(1, &tex_grass_diffuse);
+  glDeleteTextures(1, &tex_dirt_diffuse);
+  glDeleteTextures(1, &tex_grass_A_diffuse);
+  glDeleteTextures(1, &tex_grass_B_diffuse);
+  glDeleteTextures(1, &tex_stone_diffuse);
 }
 
 void TestScene::init(GLFWwindow* window)
@@ -192,41 +204,52 @@ void TestScene::init(GLFWwindow* window)
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LEQUAL);
 
+  glDepthMask(GL_TRUE);
+
   glShadeModel(GL_FLAT);
   glEnable(GL_NORMALIZE);
 
-  GLfloat ambient[]  = { 0.0f, 0.0f, 0.0f, 1.0f }; glLightfv(GL_LIGHT0, GL_AMBIENT,  ambient);
+  GLfloat ambient[]  = { 1.0f, 1.0f, 1.0f, 1.0f }; glLightfv(GL_LIGHT0, GL_AMBIENT,  ambient);
   GLfloat diffuse[]  = { 1.0f, 1.0f, 1.0f, 1.0f }; glLightfv(GL_LIGHT0, GL_DIFFUSE,  diffuse);
   GLfloat specular[] = { 1.0f, 1.0f, 1.0f, 1.0f }; glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
+  GLfloat position[] = { 100.0f, 100.0f, 100.0f, 0.0f }; glLightfv(GL_LIGHT0, GL_POSITION, position);
 
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
   GLfloat verticies_map[n_verticies_map];
   GLushort indicies_map[n_indicies_map];
 
-  terrain_vert = makeShader(GL_VERTEX_SHADER, "Media/Shaders/basic.vert");
-  terrain_frag = makeShader(GL_FRAGMENT_SHADER, "Media/Shaders/basic.frag");
+  std::string terrain_vert_arr[] = { "Media/Shaders/basic.vert" };
+  std::string terrain_frag_arr[] = { "Media/Shaders/basic.frag", "Media/Shaders/noise2D.glsl" };
+  terrain_vert = makeShader(GL_VERTEX_SHADER, 1, terrain_vert_arr);
+  terrain_frag = makeShader(GL_FRAGMENT_SHADER, 2, terrain_frag_arr);
   terrain_prog = makeProgram(terrain_vert, terrain_frag);
   glUseProgram(terrain_prog);
 
-  GLint lower_diffuse  = glGetUniformLocation(terrain_prog, "lower_diffuse");
-  GLint middle_diffuse = glGetUniformLocation(terrain_prog, "middle_diffuse");
-  GLint upper_diffuse  = glGetUniformLocation(terrain_prog, "upper_diffuse");
+  GLint lower_diffuse    = glGetUniformLocation(terrain_prog, "lower_diffuse");
+  GLint middle_A_diffuse = glGetUniformLocation(terrain_prog, "middle_A_diffuse");
+  GLint middle_B_diffuse = glGetUniformLocation(terrain_prog, "middle_B_diffuse");
+  GLint upper_diffuse    = glGetUniformLocation(terrain_prog, "upper_diffuse");
 
-  tex_dirt_diffuse  = loadTexture("Media/Textures/Dirt_Diffuse.tga");
-  tex_grass_diffuse = loadTexture("Media/Textures/Grass_Diffuse.tga");
-  tex_stone_diffuse = loadTexture("Media/Textures/Stone_Diffuse.tga");
+  tex_dirt_diffuse    = loadTexture("Media/Textures/Dirt_Diffuse.tga");
+  tex_grass_A_diffuse = loadTexture("Media/Textures/Grass_A_Diffuse.tga");
+  tex_grass_B_diffuse = loadTexture("Media/Textures/Grass_B_Diffuse.tga");
+  tex_stone_diffuse   = loadTexture("Media/Textures/Stone_Diffuse.tga");
 
   glUniform1i(lower_diffuse, 0);
   glActiveTexture(GL_TEXTURE0 + 0);
   glBindTexture(GL_TEXTURE_2D, tex_dirt_diffuse);
 
-  glUniform1i(middle_diffuse, 1);
+  glUniform1i(middle_A_diffuse, 1);
   glActiveTexture(GL_TEXTURE0 + 1);
-  glBindTexture(GL_TEXTURE_2D, tex_grass_diffuse);
+  glBindTexture(GL_TEXTURE_2D, tex_grass_A_diffuse);
 
-  glUniform1i(upper_diffuse, 2);
+  glUniform1i(middle_B_diffuse, 2);
   glActiveTexture(GL_TEXTURE0 + 2);
+  glBindTexture(GL_TEXTURE_2D, tex_grass_B_diffuse);
+
+  glUniform1i(upper_diffuse, 3);
+  glActiveTexture(GL_TEXTURE0 + 3);
   glBindTexture(GL_TEXTURE_2D, tex_stone_diffuse);
 
   unsigned i = 0;
@@ -272,26 +295,26 @@ void TestScene::render(GLFWwindow* window, double delta, int width, int height)
 {
   if (key_w)
   {
-    current_pos.x += sin(dx) * delta * 100.0f;
-    current_pos.z += cos(dx) * delta * 100.0f;
+    current_pos.x += sin(dx) * delta * 10.0f;
+    current_pos.z += cos(dx) * delta * 10.0f;
   }
   if (key_s)
   {
-    current_pos.x -= sin(dx) * delta * 100.0f;
-    current_pos.z -= cos(dx) * delta * 100.0f;
+    current_pos.x -= sin(dx) * delta * 10.0f;
+    current_pos.z -= cos(dx) * delta * 10.0f;
   }
   if (key_a)
   {
-    current_pos.x += sin(dx + (M_PI / 2.0f)) * delta * 100.0f;
-    current_pos.z += cos(dx + (M_PI / 2.0f)) * delta * 100.0f;
+    current_pos.x += sin(dx + (M_PI / 2.0f)) * delta * 10.0f;
+    current_pos.z += cos(dx + (M_PI / 2.0f)) * delta * 10.0f;
   }
   if (key_d)
   {
-    current_pos.x -= sin(dx + (M_PI / 2.0f)) * delta * 100.0f;
-    current_pos.z -= cos(dx + (M_PI / 2.0f)) * delta * 100.0f;
+    current_pos.x -= sin(dx + (M_PI / 2.0f)) * delta * 10.0f;
+    current_pos.z -= cos(dx + (M_PI / 2.0f)) * delta * 10.0f;
   }
-  if (key_space) current_pos.y += delta * 200.0f;
-  if (key_shift) current_pos.y -= delta * 200.0f;
+  if (key_space) current_pos.y += delta * 20.0f;
+  if (key_shift) current_pos.y -= delta * 20.0f;
 
   float ar = (float)width / (float)height;
 
@@ -368,7 +391,8 @@ void TestScene::render(GLFWwindow* window, double delta, int width, int height)
   glPixelTransferf(GL_BLUE_BIAS, -1.0f);
 
   font_AverageMono.FaceSize(16);
-  font_AverageMono.Render("Test Scene", -1, FTPoint(0.0f, 32.0f));
-  font_AverageMono.Render(static_cast<std::ostringstream*>(&(std::ostringstream() << "Wireframe : " << wireframe))->str().c_str(), -1, FTPoint(0.0f, 16.0f));
+  font_AverageMono.Render("Test Scene", -1, FTPoint(0.0f, 48.0f));
+  font_AverageMono.Render(static_cast<std::ostringstream*>(&(std::ostringstream() << "Frame Time (ms): " << delta * 1000))->str().c_str(), -1, FTPoint(0.0f, 32.0f));
+  font_AverageMono.Render(static_cast<std::ostringstream*>(&(std::ostringstream() << "Wireframe      : " << wireframe))->str().c_str(), -1, FTPoint(0.0f, 16.0f));
   font_AverageMono.Render(static_cast<std::ostringstream*>(&(std::ostringstream() << width << "x" << height))->str().c_str(), -1, FTPoint(0.0f, 0.0f));
 }
