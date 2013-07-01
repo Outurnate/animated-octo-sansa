@@ -2,10 +2,12 @@
 
 float snoise(vec2 v);
 
-uniform sampler2D lower_diffuse;
+uniform sampler2D lower_A_diffuse;
+uniform sampler2D lower_B_diffuse;
 uniform sampler2D middle_A_diffuse;
 uniform sampler2D middle_B_diffuse;
-uniform sampler2D upper_diffuse;
+uniform sampler2D upper_A_diffuse;
+uniform sampler2D upper_B_diffuse;
 
 varying vec4 pos;
 
@@ -14,6 +16,8 @@ varying vec4 pos;
 #define BAND_BREADTH 4
 #define MAX_HEIGHT 128
 #define BLOCK_ZONE(LOWER, UPPER, VAL) ((VAL > LOWER) && (VAL <= UPPER))
+
+#define TEX_SCALE 20
 
 void main()
 {
@@ -26,9 +30,9 @@ void main()
 			(mix(vec3(0, 1, 0), vec3(0, 0, 1), (clamp(pos.y, (UPPER_BAND - BAND_BREADTH), (UPPER_BAND + BAND_BREADTH)) - (UPPER_BAND - BAND_BREADTH)) / ((UPPER_BAND + BAND_BREADTH) - (UPPER_BAND - BAND_BREADTH)))
 			* float(BLOCK_ZONE((UPPER_BAND - BAND_BREADTH), (UPPER_BAND + BAND_BREADTH), pos.y)));
   vec4 diffuse        = vec4(
-       		      	texture2D(lower_diffuse,  pos.xz / 10).rgb * terr_type.x
-         	      + mix(texture2D(middle_B_diffuse, pos.xz / 10).rgb, texture2D(middle_A_diffuse, pos.xz / 10).rgb, snoise(pos.xz / 200)) * terr_type.y
-		      + texture2D(upper_diffuse,  pos.xz / 10).rgb * terr_type.z, 1);
+       		      	mix(texture2D(lower_A_diffuse,  pos.xz / TEX_SCALE).rgb, texture2D(lower_B_diffuse,  pos.xz / TEX_SCALE).rgb, snoise(pos.xz / TEX_SCALE)) * terr_type.x
+         	      + mix(texture2D(middle_A_diffuse, pos.xz / TEX_SCALE).rgb, texture2D(middle_B_diffuse, pos.xz / TEX_SCALE).rgb, snoise(pos.xz / TEX_SCALE)) * terr_type.y
+		      + mix(texture2D(upper_A_diffuse,  pos.xz / TEX_SCALE).rgb, texture2D(upper_B_diffuse,  pos.xz / TEX_SCALE).rgb, snoise(pos.xz / TEX_SCALE)) * terr_type.z, 1);
   vec4 ambient        = (diffuse * .1);
   vec4 specular       = (diffuse * 0);
 

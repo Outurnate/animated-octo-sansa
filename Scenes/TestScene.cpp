@@ -190,10 +190,12 @@ void TestScene::destroy(GLFWwindow* window)
 {
   glDeleteBuffers(1, &map_vbo);
   glDeleteBuffers(1, &map_ibo);
-  glDeleteTextures(1, &tex_dirt_diffuse);
+  glDeleteTextures(1, &tex_dirt_A_diffuse);
+  glDeleteTextures(1, &tex_dirt_B_diffuse);
   glDeleteTextures(1, &tex_grass_A_diffuse);
   glDeleteTextures(1, &tex_grass_B_diffuse);
-  glDeleteTextures(1, &tex_stone_diffuse);
+  glDeleteTextures(1, &tex_stone_A_diffuse);
+  glDeleteTextures(1, &tex_stone_B_diffuse);
 }
 
 void TestScene::init(GLFWwindow* window)
@@ -226,31 +228,43 @@ void TestScene::init(GLFWwindow* window)
   terrain_prog = makeProgram(terrain_vert, terrain_frag);
   glUseProgram(terrain_prog);
 
-  GLint lower_diffuse    = glGetUniformLocation(terrain_prog, "lower_diffuse");
+  GLint lower_A_diffuse    = glGetUniformLocation(terrain_prog, "lower_A_diffuse");
+  GLint lower_B_diffuse    = glGetUniformLocation(terrain_prog, "lower_B_diffuse");
   GLint middle_A_diffuse = glGetUniformLocation(terrain_prog, "middle_A_diffuse");
   GLint middle_B_diffuse = glGetUniformLocation(terrain_prog, "middle_B_diffuse");
-  GLint upper_diffuse    = glGetUniformLocation(terrain_prog, "upper_diffuse");
+  GLint upper_A_diffuse    = glGetUniformLocation(terrain_prog, "upper_A_diffuse");
+  GLint upper_B_diffuse    = glGetUniformLocation(terrain_prog, "upper_B_diffuse");
 
-  tex_dirt_diffuse    = loadTexture("Media/Textures/Dirt_Diffuse.tga");
+  tex_dirt_A_diffuse  = loadTexture("Media/Textures/Dirt_A_Diffuse.tga");
+  tex_dirt_B_diffuse  = loadTexture("Media/Textures/Dirt_B_Diffuse.tga");
   tex_grass_A_diffuse = loadTexture("Media/Textures/Grass_A_Diffuse.tga");
   tex_grass_B_diffuse = loadTexture("Media/Textures/Grass_B_Diffuse.tga");
-  tex_stone_diffuse   = loadTexture("Media/Textures/Stone_Diffuse.tga");
+  tex_stone_A_diffuse = loadTexture("Media/Textures/Stone_A_Diffuse.tga");
+  tex_stone_B_diffuse = loadTexture("Media/Textures/Stone_B_Diffuse.tga");
 
-  glUniform1i(lower_diffuse, 0);
+  glUniform1i(lower_A_diffuse, 0);
   glActiveTexture(GL_TEXTURE0 + 0);
-  glBindTexture(GL_TEXTURE_2D, tex_dirt_diffuse);
+  glBindTexture(GL_TEXTURE_2D, tex_dirt_A_diffuse);
 
-  glUniform1i(middle_A_diffuse, 1);
+  glUniform1i(lower_B_diffuse, 1);
   glActiveTexture(GL_TEXTURE0 + 1);
+  glBindTexture(GL_TEXTURE_2D, tex_dirt_B_diffuse);
+
+  glUniform1i(middle_A_diffuse, 2);
+  glActiveTexture(GL_TEXTURE0 + 2);
   glBindTexture(GL_TEXTURE_2D, tex_grass_A_diffuse);
 
-  glUniform1i(middle_B_diffuse, 2);
-  glActiveTexture(GL_TEXTURE0 + 2);
+  glUniform1i(middle_B_diffuse, 3);
+  glActiveTexture(GL_TEXTURE0 + 3);
   glBindTexture(GL_TEXTURE_2D, tex_grass_B_diffuse);
 
-  glUniform1i(upper_diffuse, 3);
-  glActiveTexture(GL_TEXTURE0 + 3);
-  glBindTexture(GL_TEXTURE_2D, tex_stone_diffuse);
+  glUniform1i(upper_A_diffuse, 4);
+  glActiveTexture(GL_TEXTURE0 + 4);
+  glBindTexture(GL_TEXTURE_2D, tex_stone_A_diffuse);
+
+  glUniform1i(upper_B_diffuse, 5);
+  glActiveTexture(GL_TEXTURE0 + 5);
+  glBindTexture(GL_TEXTURE_2D, tex_stone_B_diffuse);
 
   unsigned i = 0;
   for(unsigned x = 0; x < map_width; ++x)
