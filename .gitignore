@@ -9,6 +9,8 @@
 #*#
 *~
 .#*~
-Makefile
-CMakeFiles
-CMakeCache.txt
+build
+media/textures/*.tga
+media/NeoTextureEdit_0.6.4
+media/neo.tar.gz
+media/master.tar.gz
