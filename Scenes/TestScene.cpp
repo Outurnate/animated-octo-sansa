@@ -1,11 +1,12 @@
 #include "TestScene.h"
 
+#include "TerrainGenerator.h"
+
 #include <fstream>
 #include <sstream>
 #include <string>
 #include <iostream>
 #include <tgmath.h>
-#include <glm/gtc/noise.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <IL/il.h>
@@ -108,9 +109,10 @@ TestScene::TestScene()
     key_w(false), key_a(false), key_s(false), key_d(false), key_space(false), key_shift(false), wireframe(false), lighting(true),
     n_verticies_map(map_width * map_height * 10), n_indicies_map(map_width * map_height * 6), font_AverageMono("AverageMono.ttf")
 {
-  for(unsigned x = 0; x < map_width; ++x)
+  generateTerrain(map, 256);
+/*  for(unsigned x = 0; x < map_width; ++x)
     for(unsigned y = 0; y < map_height; ++y)
-      map[(y * map_width) + x] = (glm::simplex(glm::vec4(x / 64.0f, y / 64.0f, 0.5f, 0.5f)) * 64.0f) + 64.0f;
+    map[(y * map_width) + x] = (glm::simplex(glm::vec4(x / 64.0f, y / 64.0f, 0.5f, 0.5f)) * 64.0f) + 64.0f;*/
   unsigned i = 0;
   for(unsigned x = 0; x < map_width; ++x)
     for(unsigned y = 0; y < map_height; ++y)
@@ -213,27 +215,26 @@ void TestScene::init(GLFWwindow* window)
 
   GLfloat ambient[]  = { 1.0f, 1.0f, 1.0f, 1.0f }; glLightfv(GL_LIGHT0, GL_AMBIENT,  ambient);
   GLfloat diffuse[]  = { 1.0f, 1.0f, 1.0f, 1.0f }; glLightfv(GL_LIGHT0, GL_DIFFUSE,  diffuse);
-  GLfloat specular[] = { 1.0f, 1.0f, 1.0f, 1.0f }; glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
-  GLfloat position[] = { 100.0f, 100.0f, 100.0f, 0.0f }; glLightfv(GL_LIGHT0, GL_POSITION, position);
+  GLfloat specular[] = { 0.0f, 0.0f, 0.0f, 1.0f }; glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
 
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
   GLfloat verticies_map[n_verticies_map];
   GLushort indicies_map[n_indicies_map];
 
-  std::string terrain_vert_arr[] = { "Media/Shaders/basic.vert" };
-  std::string terrain_frag_arr[] = { "Media/Shaders/basic.frag", "Media/Shaders/noise2D.glsl" };
+  std::string terrain_vert_arr[] = { "Media/Shaders/terrain.vert" };
+  std::string terrain_frag_arr[] = { "Media/Shaders/terrain.frag", "Media/Shaders/noise2D.glsl" };
   terrain_vert = makeShader(GL_VERTEX_SHADER, 1, terrain_vert_arr);
   terrain_frag = makeShader(GL_FRAGMENT_SHADER, 2, terrain_frag_arr);
   terrain_prog = makeProgram(terrain_vert, terrain_frag);
   glUseProgram(terrain_prog);
 
-  GLint lower_A_diffuse    = glGetUniformLocation(terrain_prog, "lower_A_diffuse");
-  GLint lower_B_diffuse    = glGetUniformLocation(terrain_prog, "lower_B_diffuse");
+  GLint lower_A_diffuse  = glGetUniformLocation(terrain_prog,  "lower_A_diffuse");
+  GLint lower_B_diffuse  = glGetUniformLocation(terrain_prog,  "lower_B_diffuse");
   GLint middle_A_diffuse = glGetUniformLocation(terrain_prog, "middle_A_diffuse");
   GLint middle_B_diffuse = glGetUniformLocation(terrain_prog, "middle_B_diffuse");
-  GLint upper_A_diffuse    = glGetUniformLocation(terrain_prog, "upper_A_diffuse");
-  GLint upper_B_diffuse    = glGetUniformLocation(terrain_prog, "upper_B_diffuse");
+  GLint upper_A_diffuse  = glGetUniformLocation(terrain_prog,  "upper_A_diffuse");
+  GLint upper_B_diffuse  = glGetUniformLocation(terrain_prog,  "upper_B_diffuse");
 
   tex_dirt_A_diffuse  = loadTexture("Media/Textures/Dirt_A_Diffuse.tga");
   tex_dirt_B_diffuse  = loadTexture("Media/Textures/Dirt_B_Diffuse.tga");
@@ -330,6 +331,9 @@ void TestScene::render(GLFWwindow* window, double delta, int width, int height)
   if (key_space) current_pos.y += delta * 20.0f;
   if (key_shift) current_pos.y -= delta * 20.0f;
 
+  GLint camera_pos = glGetUniformLocation(terrain_prog, "camera_pos");
+  glUniform3f(camera_pos, current_pos.x, current_pos.y, current_pos.z);
+
   float ar = (float)width / (float)height;
 
   glUseProgram(terrain_prog);
@@ -359,31 +363,8 @@ void TestScene::render(GLFWwindow* window, double delta, int width, int height)
     glm::lookAt(glm::vec3(current_pos.x,         current_pos.y,         current_pos.z),
 		glm::vec3(current_pos.x + dir.x, current_pos.y + dir.y, current_pos.z + dir.z),
 		glm::vec3(up.x,                  up.y,                  up.z));
-  GLfloat fmodel[16] =
-    {
-      model[0][0],
-      model[0][1],
-      model[0][2],
-      model[0][3],
-
-      model[1][0],
-      model[1][1],
-      model[1][2],
-      model[1][3],
-
-      model[2][0],
-      model[2][1],
-      model[2][2],
-      model[2][3],
-
-      model[3][0],
-      model[3][1],
-      model[3][2],
-      model[3][3]
-    };
-  /*for (unsigned i = 0; i < 16; ++i)
-    printf("%d,", fmodel[i]);*/
-  glMultMatrixf(fmodel);
+  glLightfv(GL_LIGHT0, GL_POSITION, glm::value_ptr(model * glm::vec4(-1, -1, 1, 0)));
+  glLoadMatrixf(glm::value_ptr(model));
 
   if (lighting)
   {

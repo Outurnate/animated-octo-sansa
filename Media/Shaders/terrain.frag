@@ -10,6 +10,8 @@ uniform sampler2D upper_A_diffuse;
 uniform sampler2D upper_B_diffuse;
 
 varying vec4 pos;
+varying vec3 cam;
+varying vec3 normal;
 
 #define LOWER_BAND 42
 #define UPPER_BAND 85
@@ -35,6 +37,18 @@ void main()
 		      + mix(texture2D(upper_A_diffuse,  pos.xz / TEX_SCALE).rgb, texture2D(upper_B_diffuse,  pos.xz / TEX_SCALE).rgb, noise) * terr_type.z, 1);
   vec4 ambient        = (diffuse * .1);
   vec4 specular       = (diffuse * 0);
+  float shininess     = 0;
 
-  gl_FragColor = diffuse;
+  vec4 color = ambient * gl_LightSource[0].ambient;
+  vec3 n = normalize(normal);
+  vec3 ldir = normalize(gl_LightSource[0].position.xyz);
+  vec3 halfv = normalize(normalize(cam) + ldir);
+
+  float nl = max(dot(n, ldir), 0.0);
+
+  if (nl > 0.0)
+    color += (diffuse * gl_LightSource[0].diffuse * nl)
+          +  (specular * gl_LightSource[0].specular * pow(max(dot(n, normalize(halfv)), 0.0), shininess));
+
+  gl_FragColor = color;
 }
