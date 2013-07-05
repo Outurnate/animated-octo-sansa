@@ -1,7 +1,5 @@
 #include "TestScene.h"
 
-#include "TerrainGenerator.h"
-
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -104,23 +102,12 @@ static inline GLuint loadTexture(const char* fname, bool alpha = false)
 }
 
 TestScene::TestScene()
-  : Scene(), map_width(256), map_height(256), map(new float[map_width * map_height]), map_normal(new glm::vec3[map_width * map_height * 3]),
-    current_pos({ 1.5f, 100.0f, 6.0f }),
+  : Scene(), current_pos({ 1.5f, 100.0f, 6.0f }), chunks(),
     key_w(false), key_a(false), key_s(false), key_d(false), key_space(false), key_shift(false), wireframe(false), lighting(true),
-    n_verticies_map(map_width * map_height * 10), n_indicies_map(map_width * map_height * 6), font_AverageMono("AverageMono.ttf")
+    font_AverageMono("AverageMono.ttf")
 {
-  generateTerrain(map, 256);
-/*  for(unsigned x = 0; x < map_width; ++x)
-    for(unsigned y = 0; y < map_height; ++y)
-    map[(y * map_width) + x] = (glm::simplex(glm::vec4(x / 64.0f, y / 64.0f, 0.5f, 0.5f)) * 64.0f) + 64.0f;*/
-  unsigned i = 0;
-  for(unsigned x = 0; x < map_width; ++x)
-    for(unsigned y = 0; y < map_height; ++y)
-      map_normal[i++] = glm::normalize(glm::cross(
-      ((x == 0)                ? glm::vec3(x, map[(y * map_width) + x], y) : glm::vec3(x - 1, map[(y       * map_width) + x - 1], y)) -
-      ((x == (map_width  - 1)) ? glm::vec3(x, map[(y * map_width) + x], y) : glm::vec3(x + 1, map[(y       * map_width) + x + 1], y)),
-      ((y == 0)                ? glm::vec3(x, map[(y * map_width) + x], y) : glm::vec3(x,     map[((y - 1) * map_width) + x],    y - 1)) -
-      ((y == (map_height - 1)) ? glm::vec3(x, map[(y * map_width) + x], y) : glm::vec3(x,     map[((y + 1) * map_width) + x],    y + 1))));
+  chunks.push_back(TerrainChunk(256, 0, 0));
+  chunks.push_back(TerrainChunk(256, 256, 0));
 }
 
 TestScene::~TestScene() { }
@@ -190,14 +177,14 @@ void TestScene::mouse(GLFWwindow* window, double x, double y)
 
 void TestScene::destroy(GLFWwindow* window)
 {
-  glDeleteBuffers(1, &map_vbo);
-  glDeleteBuffers(1, &map_ibo);
   glDeleteTextures(1, &tex_dirt_A_diffuse);
   glDeleteTextures(1, &tex_dirt_B_diffuse);
   glDeleteTextures(1, &tex_grass_A_diffuse);
   glDeleteTextures(1, &tex_grass_B_diffuse);
   glDeleteTextures(1, &tex_stone_A_diffuse);
   glDeleteTextures(1, &tex_stone_B_diffuse);
+  for (unsigned i = 0; i < chunks.size(); ++i)
+    chunks[i].Unload();
 }
 
 void TestScene::init(GLFWwindow* window)
@@ -218,9 +205,6 @@ void TestScene::init(GLFWwindow* window)
   GLfloat specular[] = { 0.0f, 0.0f, 0.0f, 1.0f }; glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
 
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-
-  GLfloat verticies_map[n_verticies_map];
-  GLushort indicies_map[n_indicies_map];
 
   std::string terrain_vert_arr[] = { "Media/Shaders/terrain.vert" };
   std::string terrain_frag_arr[] = { "Media/Shaders/terrain.frag", "Media/Shaders/noise2D.glsl" };
@@ -267,43 +251,8 @@ void TestScene::init(GLFWwindow* window)
   glActiveTexture(GL_TEXTURE0 + 5);
   glBindTexture(GL_TEXTURE_2D, tex_stone_B_diffuse);
 
-  unsigned i = 0;
-  for(unsigned x = 0; x < map_width; ++x)
-    for(unsigned y = 0; y < map_height; ++y)
-    {
-      verticies_map[i++] = x; // X
-      verticies_map[i++] = map[(y * map_width) + x]; // Y
-      verticies_map[i++] = y; // Z
-      verticies_map[i++] = map_normal[(y * map_width) + x].x; // NX
-      verticies_map[i++] = map_normal[(y * map_width) + x].y; // NY
-      verticies_map[i++] = map_normal[(y * map_width) + x].z; // NZ
-      verticies_map[i++] = 0; // R
-      verticies_map[i++] = 0; // G
-      verticies_map[i++] = 0; // B
-      verticies_map[i++] = 0; // A
-    }
-
-  i = 0;
-  for(unsigned x = 0; x < map_width - 1; ++x)
-    for(unsigned y = 0; y < map_height - 1; ++y)
-    {
-      indicies_map[i++] = (y * map_height) + x;
-      indicies_map[i++] = (y * map_height) + x + 1;
-      indicies_map[i++] = (y * map_height) + x + map_height + 1;
-      indicies_map[i++] = (y * map_height) + x + map_height + 1;
-      indicies_map[i++] = (y * map_height) + x + map_height;
-      indicies_map[i++] = (y * map_height) + x;
-    }
-
-  glGenBuffers(1, &map_vbo);
-  glBindBuffer(GL_ARRAY_BUFFER, map_vbo);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(verticies_map), verticies_map, GL_STATIC_DRAW);
-  glVertexPointer(3, GL_FLOAT, 10 * sizeof(GLfloat), (GLvoid*)0);
-  glNormalPointer(GL_FLOAT, 10 * sizeof(GLfloat), (GLvoid*)3);
-
-  glGenBuffers(1, &map_ibo);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, map_ibo);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicies_map), indicies_map, GL_STATIC_DRAW);
+  for (unsigned i = 0; i < chunks.size(); ++i)
+    chunks[i].Load();
 }
 
 void TestScene::render(GLFWwindow* window, double delta, int width, int height)
@@ -372,11 +321,8 @@ void TestScene::render(GLFWwindow* window, double delta, int width, int height)
     glEnable(GL_LIGHT0);
   }
 
-  glEnableClientState(GL_VERTEX_ARRAY);
-  glBindBuffer(GL_ARRAY_BUFFER, map_vbo);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, map_ibo);
-  glDrawElements(GL_TRIANGLES, n_indicies_map, GL_UNSIGNED_SHORT, NULL);
-  glDisableClientState(GL_VERTEX_ARRAY);
+  for (unsigned i = 0; i < chunks.size(); ++i)
+    chunks[i].Render();
 
   glUseProgram(0);
   glDisable(GL_LIGHTING);

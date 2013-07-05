@@ -6,24 +6,23 @@
 #include <GLFW/glfw3.h>
 #include <FTGL/ftgl.h>
 #include <glm/glm.hpp>
+#include <vector>
 
 #include "Scene.h"
+#include "TerrainChunk.h"
 
 struct point3f { float x, y, z; };
 
 class TestScene : public Scene
 {
 private:
-  unsigned map_width, map_height;
   float* map;
-  glm::vec3* map_normal;
   point3f current_pos;
   bool key_w, key_a, key_s, key_d, key_space, key_shift, wireframe, lighting;
-  GLuint map_vbo, map_ibo, terrain_vert, terrain_frag, terrain_prog, tex_grass_A_diffuse, tex_grass_B_diffuse, tex_dirt_A_diffuse, tex_dirt_B_diffuse, tex_stone_A_diffuse, tex_stone_B_diffuse;
-  size_t n_verticies_map;
-  size_t n_indicies_map;
+  GLuint terrain_vert, terrain_frag, terrain_prog, tex_grass_A_diffuse, tex_grass_B_diffuse, tex_dirt_A_diffuse, tex_dirt_B_diffuse, tex_stone_A_diffuse, tex_stone_B_diffuse;
   double dx, dy;
   FTGLPixmapFont font_AverageMono;
+  std::vector<TerrainChunk> chunks;
 public:
   TestScene();
   virtual ~TestScene();
