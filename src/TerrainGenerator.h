@@ -3,7 +3,7 @@
 
 #include <glm/gtc/noise.hpp>
 
-void generateTerrain(float *map, unsigned size)
+inline void generateTerrain(float *map, unsigned size)
 {
   for(unsigned x = 0; x < size; ++x)
     for(unsigned y = 0; y < size; ++y)
