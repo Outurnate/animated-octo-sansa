@@ -1,4 +1,4 @@
-#include "TestScene.h"
+#include "TerrainScene.h"
 
 #include <fstream>
 #include <sstream>
@@ -101,18 +101,18 @@ static inline GLuint loadTexture(const char* fname, bool alpha = false)
   return tex;
 }
 
-TestScene::TestScene()
+TerrainScene::TerrainScene()
   : Scene(), current_pos({ 1.5f, 100.0f, 6.0f }), chunks(),
     key_w(false), key_a(false), key_s(false), key_d(false), key_space(false), key_shift(false), wireframe(false), lighting(true),
-    font_AverageMono("AverageMono.ttf")
+    font_AverageMono("media/fonts/AverageMono.ttf")
 {
   chunks.push_back(TerrainChunk(256, 0, 0));
   chunks.push_back(TerrainChunk(256, 256, 0));
 }
 
-TestScene::~TestScene() { }
+TerrainScene::~TerrainScene() { }
 
-void TestScene::key(GLFWwindow* window, int key, int scancode, int action, int mods)
+void TerrainScene::key(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
   if (action == GLFW_PRESS)
     switch(key)
@@ -166,7 +166,7 @@ void TestScene::key(GLFWwindow* window, int key, int scancode, int action, int m
     }
 }
 
-void TestScene::mouse(GLFWwindow* window, double x, double y)
+void TerrainScene::mouse(GLFWwindow* window, double x, double y)
 {
   int width, height;
   glfwGetFramebufferSize(window, &width, &height);
@@ -175,7 +175,7 @@ void TestScene::mouse(GLFWwindow* window, double x, double y)
   glfwSetCursorPos(window, width / 2, height / 2);
 }
 
-void TestScene::destroy(GLFWwindow* window)
+void TerrainScene::destroy(GLFWwindow* window)
 {
   glDeleteTextures(1, &tex_dirt_A_diffuse);
   glDeleteTextures(1, &tex_dirt_B_diffuse);
@@ -187,7 +187,7 @@ void TestScene::destroy(GLFWwindow* window)
     chunks[i].Unload();
 }
 
-void TestScene::init(GLFWwindow* window)
+void TerrainScene::init(GLFWwindow* window)
 {
   glEnable(GL_CULL_FACE);
   glCullFace(GL_BACK);
@@ -206,8 +206,8 @@ void TestScene::init(GLFWwindow* window)
 
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
-  std::string terrain_vert_arr[] = { "Media/Shaders/terrain.vert" };
-  std::string terrain_frag_arr[] = { "Media/Shaders/terrain.frag", "Media/Shaders/noise2D.glsl" };
+  std::string terrain_vert_arr[] = { "media/shaders/terrain.vert.glsl" };
+  std::string terrain_frag_arr[] = { "media/shaders/terrain.frag.glsl", "media/shaders/noise2D.glsl" };
   terrain_vert = makeShader(GL_VERTEX_SHADER, 1, terrain_vert_arr);
   terrain_frag = makeShader(GL_FRAGMENT_SHADER, 2, terrain_frag_arr);
   terrain_prog = makeProgram(terrain_vert, terrain_frag);
@@ -220,12 +220,12 @@ void TestScene::init(GLFWwindow* window)
   GLint upper_A_diffuse  = glGetUniformLocation(terrain_prog,  "upper_A_diffuse");
   GLint upper_B_diffuse  = glGetUniformLocation(terrain_prog,  "upper_B_diffuse");
 
-  tex_dirt_A_diffuse  = loadTexture("Media/Textures/Dirt_A_Diffuse.tga");
-  tex_dirt_B_diffuse  = loadTexture("Media/Textures/Dirt_B_Diffuse.tga");
-  tex_grass_A_diffuse = loadTexture("Media/Textures/Grass_A_Diffuse.tga");
-  tex_grass_B_diffuse = loadTexture("Media/Textures/Grass_B_Diffuse.tga");
-  tex_stone_A_diffuse = loadTexture("Media/Textures/Stone_A_Diffuse.tga");
-  tex_stone_B_diffuse = loadTexture("Media/Textures/Stone_B_Diffuse.tga");
+  tex_dirt_A_diffuse  = loadTexture("media/textures/Dirt_A_Diffuse.tga");
+  tex_dirt_B_diffuse  = loadTexture("media/textures/Dirt_B_Diffuse.tga");
+  tex_grass_A_diffuse = loadTexture("media/textures/Grass_A_Diffuse.tga");
+  tex_grass_B_diffuse = loadTexture("media/textures/Grass_B_Diffuse.tga");
+  tex_stone_A_diffuse = loadTexture("media/textures/Stone_A_Diffuse.tga");
+  tex_stone_B_diffuse = loadTexture("media/textures/Stone_B_Diffuse.tga");
 
   glUniform1i(lower_A_diffuse, 0);
   glActiveTexture(GL_TEXTURE0 + 0);
@@ -255,7 +255,7 @@ void TestScene::init(GLFWwindow* window)
     chunks[i].Load();
 }
 
-void TestScene::render(GLFWwindow* window, double delta, int width, int height)
+void TerrainScene::render(GLFWwindow* window, double delta, int width, int height)
 {
   if (key_w)
   {

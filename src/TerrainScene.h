@@ -1,5 +1,5 @@
-#ifndef TESTSCENE_H
-#define TESTSCENE_H
+#ifndef TERRAINSCENE_H
+#define TERRAINSCENE_H
 
 #define GLFW_INCLUDE_GLU
 #include <GL/glew.h>
@@ -13,7 +13,7 @@
 
 struct point3f { float x, y, z; };
 
-class TestScene : public Scene
+class TerrainScene : public Scene
 {
 private:
   float* map;
@@ -24,8 +24,8 @@ private:
   FTGLPixmapFont font_AverageMono;
   std::vector<TerrainChunk> chunks;
 public:
-  TestScene();
-  virtual ~TestScene();
+  TerrainScene();
+  virtual ~TerrainScene();
 
   virtual void init(GLFWwindow* window);
   virtual void key(GLFWwindow* window, int key, int scancode, int action, int mods);

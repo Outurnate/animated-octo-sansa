@@ -9,8 +9,7 @@
 #include <IL/il.h>
 
 #include "Scene.h"
-#include "TestScene.h"
-#include "Scene2D.h"
+#include "TerrainScene.h"
 
 static Scene* scene;
 
@@ -34,7 +33,7 @@ static void mouse(GLFWwindow* window, double x, double y)
 int main(void)
 {
   GLFWwindow* window;
-  scene = /*new Scene2D();*/new TestScene(); // gotta make a picker soon
+  scene = new TerrainScene();
 
   glfwSetErrorCallback(error);
   if (!glfwInit())

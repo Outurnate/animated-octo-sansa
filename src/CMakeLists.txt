@@ -1,0 +1,22 @@
+cmake_minimum_required (VERSION 2.6)
+project (glfw-thinger)
+SET(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../CMakeModules ${CMAKE_MODULE_PATH})
+find_package(DevIL REQUIRED)
+find_package(GLEW REQUIRED)
+find_package(FTGL REQUIRED)
+find_package(GLM REQUIRED)
+find_package(ASSIMP REQUIRED)
+find_package(Freetype REQUIRED)
+find_package(OpenGL REQUIRED)
+set (glfw-thinger_VERSION_MAJOR 1)
+set (glfw-thinger_VERSION_MINOR 0)
+ADD_DEFINITIONS(-std=c++0x)
+configure_file (
+  "${PROJECT_SOURCE_DIR}/Config.h.in"
+  "${PROJECT_BINARY_DIR}/Config.h"
+)
+include_directories("${PROJECT_BINARY_DIR}")
+include_directories("${PROJECT_SOURCE_DIR}")
+add_executable(glfw-thinger glfw-thinger.cpp TerrainChunk.cpp TerrainScene.cpp)
+include_directories(${OPENGL_INCLUDE_DIRS} ${OPENGL_glu_INCLUDE_DIRS} ${GLEW_INCLUDE_PATH} ${FTGL_INCLUDE_DIRS} ${ASSIMP_INCLUDE_DIRS} ${GLM_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} ${IL_INCLUDE_DIRS})
+target_link_libraries(glfw-thinger glfw ${FTGL_LIBRARIES} ${FREETYPE_LIBRARIES} ${GLFW_LIBRARIES} ${OPENGL_glu_LIBRARY} ${OPENGL_LIBRARIES} ${GLEW_LIBRARY} ${ASSIMP_LIBRARIES}  ${IL_LIBRARIES})
