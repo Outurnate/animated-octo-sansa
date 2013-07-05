@@ -5,6 +5,10 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <IL/il.h>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <iostream>
 
 inline void showShaderLog(GLuint object, PFNGLGETSHADERIVPROC glGet__iv, PFNGLGETSHADERINFOLOGPROC glGet__InfoLog)
 {
