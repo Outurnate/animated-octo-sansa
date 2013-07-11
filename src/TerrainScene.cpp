@@ -11,8 +11,9 @@ TerrainScene::TerrainScene()
     key_w(false), key_a(false), key_s(false), key_d(false), key_space(false), key_shift(false), wireframe(false), lighting(true),
     font_AverageMono("media/fonts/AverageMono.ttf")
 {
-  chunks.push_back(TerrainChunk(256, 0, 0));
-  chunks.push_back(TerrainChunk(256, 256, 0));
+  for (unsigned x = 0; x < 4; ++x)
+    for (unsigned y = 0; y < 4; ++y)
+      chunks.push_back(TerrainChunk(256, x * 256, y * 256));
 }
 
 TerrainScene::~TerrainScene() { }

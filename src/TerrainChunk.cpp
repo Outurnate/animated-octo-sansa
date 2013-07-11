@@ -71,6 +71,8 @@ void TerrainChunk::Render()
 {
   glEnableClientState(GL_VERTEX_ARRAY);
   glBindBuffer(GL_ARRAY_BUFFER, map_vbo);
+  glVertexPointer(3, GL_FLOAT, 10 * sizeof(GLfloat), (GLvoid*)0);
+  glNormalPointer(GL_FLOAT, 10 * sizeof(GLfloat), (GLvoid*)3);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, map_ibo);
   glDrawElements(GL_TRIANGLES, n_indicies_map, GL_UNSIGNED_SHORT, NULL);
   glDisableClientState(GL_VERTEX_ARRAY);
