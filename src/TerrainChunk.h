@@ -15,7 +15,7 @@ private:
   size_t n_verticies_map;
   size_t n_indicies_map;
 public:
-  TerrainChunk(unsigned size, unsigned xoff, unsigned yoff);
+  TerrainChunk(unsigned size, unsigned xoff, unsigned yoff, float *map);
   virtual ~TerrainChunk();
 
   void Load();

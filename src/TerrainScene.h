@@ -6,10 +6,9 @@
 #include <GLFW/glfw3.h>
 #include <FTGL/ftgl.h>
 #include <glm/glm.hpp>
-#include <vector>
 
 #include "Scene.h"
-#include "TerrainChunk.h"
+#include "TerrainObject.h"
 
 struct point3f { float x, y, z; };
 
@@ -22,7 +21,7 @@ private:
   GLuint terrain_vert, terrain_frag, terrain_prog, tex_grass_A_diffuse, tex_grass_B_diffuse, tex_dirt_A_diffuse, tex_dirt_B_diffuse, tex_stone_A_diffuse, tex_stone_B_diffuse;
   double dx, dy;
   FTGLPixmapFont font_AverageMono;
-  std::vector<TerrainChunk> chunks;
+  TerrainObject terrain;
 public:
   TerrainScene();
   virtual ~TerrainScene();

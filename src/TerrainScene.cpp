@@ -7,13 +7,10 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 TerrainScene::TerrainScene()
-  : Scene(), current_pos({ 1.5f, 100.0f, 6.0f }), chunks(),
+  : Scene(), current_pos({ 1.5f, 100.0f, 6.0f }),
     key_w(false), key_a(false), key_s(false), key_d(false), key_space(false), key_shift(false), wireframe(false), lighting(true),
-    font_AverageMono("media/fonts/AverageMono.ttf")
+    font_AverageMono("media/fonts/AverageMono.ttf"), terrain(4, 8)
 {
-  for (unsigned x = 0; x < 4; ++x)
-    for (unsigned y = 0; y < 4; ++y)
-      chunks.push_back(TerrainChunk(256, x * 256, y * 256));
 }
 
 TerrainScene::~TerrainScene() { }
@@ -89,8 +86,7 @@ void TerrainScene::destroy(GLFWwindow* window)
   glDeleteTextures(1, &tex_grass_B_diffuse);
   glDeleteTextures(1, &tex_stone_A_diffuse);
   glDeleteTextures(1, &tex_stone_B_diffuse);
-  for (unsigned i = 0; i < chunks.size(); ++i)
-    chunks[i].Unload();
+  terrain.Unload();
 }
 
 void TerrainScene::init(GLFWwindow* window)
@@ -157,8 +153,7 @@ void TerrainScene::init(GLFWwindow* window)
   glActiveTexture(GL_TEXTURE0 + 5);
   glBindTexture(GL_TEXTURE_2D, tex_stone_B_diffuse);
 
-  for (unsigned i = 0; i < chunks.size(); ++i)
-    chunks[i].Load();
+  terrain.Load();
 }
 
 void TerrainScene::render(GLFWwindow* window, double delta, int width, int height)
@@ -227,8 +222,7 @@ void TerrainScene::render(GLFWwindow* window, double delta, int width, int heigh
     glEnable(GL_LIGHT0);
   }
 
-  for (unsigned i = 0; i < chunks.size(); ++i)
-    chunks[i].Render();
+  terrain.Render();
 
   glUseProgram(0);
   glDisable(GL_LIGHTING);

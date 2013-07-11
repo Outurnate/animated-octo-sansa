@@ -17,6 +17,6 @@ configure_file (
 )
 include_directories("${PROJECT_BINARY_DIR}")
 include_directories("${PROJECT_SOURCE_DIR}")
-add_executable(glfw-thinger glfw-thinger.cpp TerrainChunk.cpp TerrainScene.cpp)
+add_executable(glfw-thinger glfw-thinger.cpp TerrainObject.cpp TerrainChunk.cpp TerrainScene.cpp)
 include_directories(${OPENGL_INCLUDE_DIRS} ${OPENGL_glu_INCLUDE_DIRS} ${GLEW_INCLUDE_PATH} ${FTGL_INCLUDE_DIRS} ${ASSIMP_INCLUDE_DIRS} ${GLM_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} ${IL_INCLUDE_DIRS})
 target_link_libraries(glfw-thinger glfw ${FTGL_LIBRARIES} ${FREETYPE_LIBRARIES} ${GLFW_LIBRARIES} ${OPENGL_glu_LIBRARY} ${OPENGL_LIBRARIES} ${GLEW_LIBRARY} ${ASSIMP_LIBRARIES}  ${IL_LIBRARIES})

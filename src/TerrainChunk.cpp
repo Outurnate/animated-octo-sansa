@@ -1,11 +1,11 @@
 #include "TerrainChunk.h"
 
-#include "TerrainGenerator.h"
+#include <string.h>
 
-TerrainChunk::TerrainChunk(unsigned size, unsigned xoff, unsigned yoff)
+TerrainChunk::TerrainChunk(unsigned size, unsigned xoff, unsigned yoff, float *map)
   : size(size), xoff(xoff), yoff(yoff), map(new float[size * size]), n_verticies_map(size * size * 10), n_indicies_map(size * size * 6)
 {
-  generateTerrain(map, size);
+  memcpy(this->map, map, size * size);
 }
 
 TerrainChunk::~TerrainChunk()
