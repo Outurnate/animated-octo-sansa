@@ -14,8 +14,8 @@ TerrainChunk::~TerrainChunk()
 
 void TerrainChunk::Load()
 {
-  GLfloat verticies_map[n_verticies_map];
-  GLushort indicies_map[n_indicies_map];
+  GLfloat *verticies_map = new GLfloat[n_verticies_map];
+  GLushort *indicies_map = new GLushort[n_indicies_map];
 
   unsigned i = 0;
   for(unsigned x = 0; x < size; ++x)
@@ -52,13 +52,16 @@ void TerrainChunk::Load()
 
   glGenBuffers(1, &map_vbo);
   glBindBuffer(GL_ARRAY_BUFFER, map_vbo);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(verticies_map), verticies_map, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, n_verticies_map * sizeof(GLfloat), verticies_map, GL_STATIC_DRAW);
   glVertexPointer(3, GL_FLOAT, 10 * sizeof(GLfloat), (GLvoid*)0);
   glNormalPointer(GL_FLOAT, 10 * sizeof(GLfloat), (GLvoid*)3);
 
   glGenBuffers(1, &map_ibo);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, map_ibo);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicies_map), indicies_map, GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, n_indicies_map * sizeof(GLushort), indicies_map, GL_STATIC_DRAW);
+
+  delete[] verticies_map;
+  delete[] indicies_map;
 }
 
 void TerrainChunk::Unload()

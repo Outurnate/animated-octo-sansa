@@ -9,7 +9,7 @@
 TerrainScene::TerrainScene()
   : Scene(), current_pos({ 1.5f, 100.0f, 6.0f }),
     key_w(false), key_a(false), key_s(false), key_d(false), key_space(false), key_shift(false), wireframe(false), lighting(true),
-    font_AverageMono("media/fonts/AverageMono.ttf"), terrain(4, 8)
+    font_AverageMono("media/fonts/AverageMono.ttf"), terrain(1, 8)
 {
 }
 

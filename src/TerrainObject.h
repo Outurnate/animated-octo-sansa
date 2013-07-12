@@ -9,7 +9,6 @@ class TerrainObject
 {
 private:
   std::vector<TerrainChunk> chunks;
-  float *map;
 public:
   TerrainObject(unsigned nc, unsigned ncp); // l/w of chunks, size of chunk as pow of 2
   virtual ~TerrainObject();
