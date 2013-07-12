@@ -10,17 +10,17 @@ TerrainObject::TerrainObject(unsigned nc, unsigned ncp)
   float *map = new float[size * size];
   for(unsigned x = 0; x < size; ++x)
     for(unsigned y = 0; y < size; ++y)
-      map[(y * size) + x] = 1/*(
+      map[(y * size) + x] = (
 	glm::simplex(glm::vec2(x / 128.f, y / 128.f))
-	) * 64 + 64*/;
+	) * 64 + 64;
   for(unsigned x = 0; x < size; x += chunk_size)
     for(unsigned y = 0; y < size; y += chunk_size)
     {
-      //float *nmap = new float[chunk_size * chunk_size];
-      //for (unsigned i = 0; i < chunk_size; ++i)
-      //memcpy(nmap, map/* + (i * chunk_size)*/, chunk_size*chunk_size);
-      chunks.push_back(TerrainChunk(chunk_size, x, y, map));
-      //delete[] nmap;
+      float *nmap = new float[chunk_size * chunk_size];
+      for(unsigned i = 0; i < chunk_size; ++i)
+	memcpy(nmap + (i * chunk_size), map + ((i + y) * chunk_size) + x, chunk_size);
+      chunks.push_back(TerrainChunk(chunk_size, x, y, nmap));
+      delete[] nmap;
     }
   delete[] map;
 }

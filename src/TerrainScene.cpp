@@ -7,9 +7,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 TerrainScene::TerrainScene()
-  : Scene(), current_pos({ 1.5f, 100.0f, 6.0f }),
+  : Scene(), current_pos({ 0.0f, 50.0f, 0.0f }),
     key_w(false), key_a(false), key_s(false), key_d(false), key_space(false), key_shift(false), wireframe(false), lighting(true),
-    font_AverageMono("media/fonts/AverageMono.ttf"), terrain(1, 8)
+    font_AverageMono("media/fonts/AverageMono.ttf"), terrain(3, 8)
 {
 }
 

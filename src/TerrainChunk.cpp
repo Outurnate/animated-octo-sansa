@@ -3,9 +3,9 @@
 #include <string.h>
 
 TerrainChunk::TerrainChunk(unsigned size, unsigned xoff, unsigned yoff, float *map)
-  : size(size), xoff(xoff), yoff(yoff), map(new float[size * size]), n_verticies_map(size * size * 10), n_indicies_map(size * size * 6)
+  : size(size), xoff(xoff), yoff(yoff), map(new float[size * size]), n_verticies_map(size * size * 10), n_indicies_map((size - 1) * (size - 1) * 6)
 {
-  memcpy(this->map, map, size * size);
+  memcpy(this->map, map, size * size * sizeof(GLfloat));
 }
 
 TerrainChunk::~TerrainChunk()
