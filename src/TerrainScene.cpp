@@ -1,6 +1,6 @@
-#include "TerrainScene.h"
+#include "TerrainScene.hpp"
 
-#include "Util.h"
+#include "Util.hpp"
 
 #include <tgmath.h>
 #include <glm/gtc/type_ptr.hpp>

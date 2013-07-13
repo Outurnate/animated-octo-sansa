@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "TerrainChunk.h"
+#include "TerrainChunk.hpp"
 
 class TerrainObject
 {

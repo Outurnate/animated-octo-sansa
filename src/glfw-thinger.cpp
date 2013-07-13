@@ -8,8 +8,8 @@
 
 #include <IL/il.h>
 
-#include "Scene.h"
-#include "TerrainScene.h"
+#include "Scene.hpp"
+#include "TerrainScene.hpp"
 
 static Scene* scene;
 

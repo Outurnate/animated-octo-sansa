@@ -1,4 +1,4 @@
-#include "TerrainChunk.h"
+#include "TerrainChunk.hpp"
 
 #include <string.h>
 

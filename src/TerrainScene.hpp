@@ -7,8 +7,8 @@
 #include <FTGL/ftgl.h>
 #include <glm/glm.hpp>
 
-#include "Scene.h"
-#include "TerrainObject.h"
+#include "Scene.hpp"
+#include "TerrainObject.hpp"
 
 struct point3f { float x, y, z; };
 

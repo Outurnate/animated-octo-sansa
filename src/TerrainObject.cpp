@@ -1,4 +1,4 @@
-#include "TerrainObject.h"
+#include "TerrainObject.hpp"
 
 #include <glm/gtc/noise.hpp>
 #include <string.h>
