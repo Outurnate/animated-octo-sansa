@@ -16,4 +16,12 @@ before_script:
   - unzip glm-0.9.4.4.zip
   - mkdir build
   - mv glm-0.9.4.4/glm build
+  - curl -L http://www.cmake.org/files/v2.8/cmake-2.8.11.2.tar.gz -o cmake-2.8.11.2.tar.gz
+  - cd cmake-2.8.11.2
+  - mkdir build
+  - cd build
+  - cmake ..
+  - make
+  - sudo make install
+  - cd ../..
 script: cd build && cmake ../src && make
