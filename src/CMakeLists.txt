@@ -13,7 +13,7 @@ find_package(ASSIMP REQUIRED)
 find_package(Freetype REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(Qt5Widgets REQUIRED)
-add_definitions(-std=c++0x -fprofile-arcs -ftest-coverage)
+add_definitions(-std=c++0x)
 configure_file (
   "${PROJECT_SOURCE_DIR}/Config.h.in"
   "${PROJECT_BINARY_DIR}/Config.h"
@@ -26,3 +26,7 @@ include_directories(${OPENGL_INCLUDE_DIRS} ${OPENGL_glu_INCLUDE_DIRS} ${GLEW_INC
 qt5_use_modules(glfw-thinger Core)
 qt5_use_modules(glfw-thinger Widgets)
 target_link_libraries(glfw-thinger glfw ${FTGL_LIBRARIES} ${FREETYPE_LIBRARIES} ${GLFW_LIBRARIES} ${OPENGL_glu_LIBRARY} ${OPENGL_LIBRARIES} ${GLEW_LIBRARY} ${ASSIMP_LIBRARIES}  ${IL_LIBRARIES})
+IF(CMAKE_BUILD_TYPE MATCHES DEBUG)
+    add_definitions(-fprofile-arcs -ftest-coverage)
+    target_link_libraries(glfw-thinger gcov)
+ENDIF(CMAKE_BUILD_TYPE MATCHES DEBUG)
