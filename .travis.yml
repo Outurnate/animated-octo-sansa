@@ -26,4 +26,4 @@ before_script:
   - sudo make install
   - cd ../..
   - sudo apt-get remove cmake
-script: cd build && cmake ../src && make
+script: cd build && ./cmake-2.8.11.2/build/bin/cmake ../src && make
