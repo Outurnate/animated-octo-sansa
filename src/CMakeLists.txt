@@ -18,10 +18,10 @@ configure_file (
   "${PROJECT_SOURCE_DIR}/Config.h.in"
   "${PROJECT_BINARY_DIR}/Config.h"
 )
-qt5_wrap_ui(worldgen.h ui/worldgen.ui)
+qt5_wrap_ui(glfw-thinger_UI_HEADERS ui/worldgen.ui)
 include_directories("${PROJECT_BINARY_DIR}")
 include_directories("${PROJECT_SOURCE_DIR}")
-add_executable(glfw-thinger glfw-thinger.cpp TerrainObject.cpp TerrainChunk.cpp TerrainScene.cpp)
+add_executable(glfw-thinger glfw-thinger.cpp TerrainObject.cpp TerrainChunk.cpp TerrainScene.cpp ${glfw-thinger_UI_HEADERS})
 include_directories(${OPENGL_INCLUDE_DIRS} ${OPENGL_glu_INCLUDE_DIRS} ${GLEW_INCLUDE_PATH} ${FTGL_INCLUDE_DIRS} ${ASSIMP_INCLUDE_DIRS} ${GLM_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} ${IL_INCLUDE_DIRS})
 qt5_use_modules(glfw-thinger Core)
 qt5_use_modules(glfw-thinger Widgets)

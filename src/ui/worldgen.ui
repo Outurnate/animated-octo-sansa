@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>WorldGen</class>
+ <widget class="QDialog" name="WorldGen">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>640</width>
+    <height>480</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>World Generation Setup</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="1" column="1">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QFrame" name="glContainer">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QTabWidget" name="tabs">
+     <property name="currentIndex">
+      <number>1</number>
+     </property>
+     <widget class="QWidget" name="generalSettings">
+      <attribute name="title">
+       <string>General Settings</string>
+      </attribute>
+      <layout class="QFormLayout" name="formLayout">
+       <item row="0" column="0">
+        <widget class="QLabel" name="seedLabel">
+         <property name="text">
+          <string>Seed</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="seed"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="generationParameters">
+      <attribute name="title">
+       <string>Generation Parameters</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_5">
+       <item row="0" column="0" alignment="Qt::AlignHCenter">
+        <widget class="QSlider" name="metaballs">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="metaballsLabel">
+         <property name="minimumSize">
+          <size>
+           <width>100</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Metaballs</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLabel" name="mountainsLabel">
+         <property name="minimumSize">
+          <size>
+           <width>100</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Mountains</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1" alignment="Qt::AlignHCenter">
+        <widget class="QSlider" name="mountains">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>Dialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>Dialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
