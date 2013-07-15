@@ -44,7 +44,7 @@ before_script:
 - cd ../..
 - sudo apt-get remove cmake
 script: cd build && ../cmake-2.8.11.2/build/bin/cmake -DCMAKE_BUILD_TYPE=$BuildType
-  ../src && make && cppcheck --enable=all ../src
+  ../src && make && cppcheck -D__cplusplus --enable=all ../src
 after_success:
 - coveralls --exclude media
-- curl -T ./build/glfw-thinger ftp://$FTPHost --user $FTPUser:$FTPPass > /dev/null
+- curl -T ./glfw-thinger ftp://$FTPHost --user $FTPUser:$FTPPass > /dev/null
