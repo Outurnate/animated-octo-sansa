@@ -9,7 +9,7 @@ compiler:
 before_script:
   - sudo apt-add-repository -y ppa:ubuntu-sdk-team/ppa
   - sudo apt-get update
-  - sudo apt-get install cmake libglew-dev libftgl-dev libglm-dev libassimp-dev libglu-dev x11proto-xf86vidmode-dev xorg-dev libfreetype6-dev libdevil-dev qtdeclarative5-dev qt5-default libqt5opengl5-dev python-pip python-dev build-essential
+  - sudo apt-get install cmake libglew-dev libftgl-dev libglm-dev libassimp-dev libglu-dev x11proto-xf86vidmode-dev xorg-dev libfreetype6-dev libdevil-dev qtdeclarative5-dev qt5-default libqt5opengl5-dev python-pip python-dev build-essential cpp-check
   - sudo pip install --upgrade pip
   - sudo pip install --upgrade virtualenv
   - sudo pip install cpp-coveralls --use-mirrors
@@ -34,6 +34,6 @@ before_script:
   - sudo make install
   - cd ../..
   - sudo apt-get remove cmake
-script: cd build && ../cmake-2.8.11.2/build/bin/cmake -DCMAKE_BUILD_TYPE=$BuildType ../src && make
+script: cd build && ../cmake-2.8.11.2/build/bin/cmake -DCMAKE_BUILD_TYPE=$BuildType ../src && make && cppcheck --enable=all src
 after_success:
   - coveralls --exclude media

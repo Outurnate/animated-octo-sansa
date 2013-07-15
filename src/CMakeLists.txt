@@ -13,7 +13,7 @@ find_package(ASSIMP REQUIRED)
 find_package(Freetype REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(Qt5Widgets REQUIRED)
-add_definitions(-std=c++0x)
+add_definitions(-std=c++0x -Wall -Wextra -Weffc++)
 configure_file (
   "${PROJECT_SOURCE_DIR}/Config.h.in"
   "${PROJECT_BINARY_DIR}/Config.h"
