@@ -17,7 +17,7 @@ before_script:
 - sudo apt-get update
 - sudo apt-get install cmake libglew-dev libftgl-dev libglm-dev libassimp-dev libglu-dev
   x11proto-xf86vidmode-dev xorg-dev libfreetype6-dev libdevil-dev qtdeclarative5-dev
-  qt5-default libqt5opengl5-dev python-pip python-dev build-essential cpp-check
+  qt5-default libqt5opengl5-dev python-pip python-dev build-essential cppcheck
 - sudo pip install --upgrade pip
 - sudo pip install --upgrade virtualenv
 - sudo pip install cpp-coveralls --use-mirrors
