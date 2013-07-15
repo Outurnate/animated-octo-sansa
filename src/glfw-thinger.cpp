@@ -8,14 +8,22 @@
 
 #include <IL/il.h>
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wall"
+#pragma GCC diagnostic ignored "-Wextra"
+#pragma GCC diagnostic ignored "-Weffc++"
+#include <QApplication>
+#pragma GCC diagnostic pop
+
 #include "Scene.hpp"
 #include "TerrainScene.hpp"
+#include "WorldGen.hpp"
 
 static Scene* scene;
 
 static void error(int error, const char* description)
 {
-  std::cout << description << std::endl;
+  std::cout << "Error: " << error << ": " << description << std::endl;
 }
 
 static void key(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -30,8 +38,14 @@ static void mouse(GLFWwindow* window, double x, double y)
   scene->mouse(window, x, y);
 }
 
-int main(void)
+int main(int argc, char *argv[])
 {
+  QApplication app(argc, argv);
+  WorldGen worldGen;
+
+  if (worldGen.exec() == QDialog::Rejected)
+    return EXIT_SUCCESS;
+
   GLFWwindow* window;
   scene = new TerrainScene();
 
@@ -71,5 +85,6 @@ int main(void)
   scene->destroy(window);
   glfwDestroyWindow(window);
   glfwTerminate();
+
   return EXIT_SUCCESS;
 }

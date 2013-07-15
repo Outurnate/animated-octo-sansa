@@ -129,5 +129,38 @@
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>WorldGen</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>560</x>
+     <y>117</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>589</x>
+     <y>351</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>WorldGen</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>591</x>
+     <y>188</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>609</x>
+     <y>302</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
