@@ -6,16 +6,16 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-TerrainScene::TerrainScene()
+TerrainScene::TerrainScene(GLFWwindow *window)
   : Scene(), current_pos({ 0.0f, 50.0f, 0.0f }),
     key_w(false), key_a(false), key_s(false), key_d(false), key_space(false), key_shift(false), wireframe(false), lighting(true),
-    font_AverageMono("media/fonts/AverageMono.ttf"), terrain(3, 8)
+    font_AverageMono("media/fonts/AverageMono.ttf"), terrain(3, 8), window(window)
 {
 }
 
 TerrainScene::~TerrainScene() { }
 
-void TerrainScene::key(GLFWwindow* window, int key, int scancode, int action, int mods)
+void TerrainScene::key(int key, int scancode, int action, int mods)
 {
   if (action == GLFW_PRESS)
     switch(key)
@@ -69,7 +69,7 @@ void TerrainScene::key(GLFWwindow* window, int key, int scancode, int action, in
     }
 }
 
-void TerrainScene::mouse(GLFWwindow* window, double x, double y)
+void TerrainScene::mouse(double x, double y)
 {
   int width, height;
   glfwGetFramebufferSize(window, &width, &height);
@@ -78,7 +78,7 @@ void TerrainScene::mouse(GLFWwindow* window, double x, double y)
   glfwSetCursorPos(window, width / 2, height / 2);
 }
 
-void TerrainScene::destroy(GLFWwindow* window)
+void TerrainScene::destroy()
 {
   glDeleteTextures(1, &tex_dirt_A_diffuse);
   glDeleteTextures(1, &tex_dirt_B_diffuse);
@@ -89,7 +89,7 @@ void TerrainScene::destroy(GLFWwindow* window)
   terrain.Unload();
 }
 
-void TerrainScene::init(GLFWwindow* window)
+void TerrainScene::init()
 {
   glEnable(GL_CULL_FACE);
   glCullFace(GL_BACK);
@@ -156,7 +156,7 @@ void TerrainScene::init(GLFWwindow* window)
   terrain.Load();
 }
 
-void TerrainScene::render(GLFWwindow* window, double delta, int width, int height)
+void TerrainScene::render(double delta, int width, int height)
 {
   if (key_w)
   {

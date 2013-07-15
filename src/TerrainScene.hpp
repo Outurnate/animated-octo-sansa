@@ -22,15 +22,16 @@ private:
   double dx, dy;
   FTGLPixmapFont font_AverageMono;
   TerrainObject terrain;
+  GLFWwindow *window;
 public:
-  TerrainScene();
+  TerrainScene(GLFWwindow *window);
   virtual ~TerrainScene();
 
-  virtual void init(GLFWwindow* window);
-  virtual void key(GLFWwindow* window, int key, int scancode, int action, int mods);
-  virtual void mouse(GLFWwindow* window, double x, double y);
-  virtual void render(GLFWwindow* window, double delta, int width, int height);
-  virtual void destroy(GLFWwindow* window);
+  virtual void init();
+  virtual void key(int key, int scancode, int action, int mods);
+  virtual void mouse(double x, double y);
+  virtual void render(double delta, int width, int height);
+  virtual void destroy();
 };
 
 #endif

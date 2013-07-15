@@ -30,12 +30,12 @@ static void key(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
   if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
     glfwSetWindowShouldClose(window, GL_TRUE);
-  scene->key(window, key, scancode, action, mods);
+  scene->key(key, scancode, action, mods);
 }
 
 static void mouse(GLFWwindow* window, double x, double y)
 {
-  scene->mouse(window, x, y);
+  scene->mouse(x, y);
 }
 
 int main(int argc, char *argv[])
@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
     return EXIT_SUCCESS;
 
   GLFWwindow* window;
-  scene = new TerrainScene();
+  scene = new TerrainScene(window);
 
   glfwSetErrorCallback(error);
   if (!glfwInit())
@@ -71,18 +71,18 @@ int main(int argc, char *argv[])
     return EXIT_FAILURE;
   }
   ilInit();
-  scene->init(window);
+  scene->init();
   while(!glfwWindowShouldClose(window))
   {
     int width, height;
     double time = glfwGetTime(), delta = time - last_time;
     glfwGetFramebufferSize(window, &width, &height);
-    scene->render(window, delta, width, height);
+    scene->render(delta, width, height);
     glfwSwapBuffers(window);
     glfwPollEvents();
     last_time = time;
   }
-  scene->destroy(window);
+  scene->destroy();
   glfwDestroyWindow(window);
   glfwTerminate();
 
