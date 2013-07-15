@@ -1,39 +1,51 @@
+---
 language: cpp
 env:
   matrix:
-    - BuildType=Debug
-    - BuildType=Release
+  - BuildType=Debug
+  - BuildType=Release
+  global:
+    secure: |-
+      fuNsSrdWXePhVC77iLGgUCN7OUTOS331YgbUaPF/HVHKsYeqs23IqN5vOcxv
+      DXf7R47RTJfmZDwiAxpSGlmjX5bbRMn17+poB123vqdDffV2FM+b/OAG+xEO
+      aSghngZus+1/8kOiOf0tgnPl4gc6PB9WqjS/E4MWkRm3XXHp7+0=
 compiler:
-  - clang
-  - gcc
+- clang
+- gcc
 before_script:
-  - sudo apt-add-repository -y ppa:ubuntu-sdk-team/ppa
-  - sudo apt-get update
-  - sudo apt-get install cmake libglew-dev libftgl-dev libglm-dev libassimp-dev libglu-dev x11proto-xf86vidmode-dev xorg-dev libfreetype6-dev libdevil-dev qtdeclarative5-dev qt5-default libqt5opengl5-dev python-pip python-dev build-essential cpp-check
-  - sudo pip install --upgrade pip
-  - sudo pip install --upgrade virtualenv
-  - sudo pip install cpp-coveralls --use-mirrors
-  - curl -L http://sourceforge.net/projects/glfw/files/glfw/3.0.1/glfw-3.0.1.zip/download -o glfw-3.0.1.zip
-  - unzip glfw-3.0.1.zip
-  - cd glfw-3.0.1
-  - cmake -DBUILD_SHARED_LIBS=YES .
-  - make
-  - sudo make install
-  - cd ..
-  - curl -L http://sourceforge.net/projects/ogl-math/files/glm-0.9.4.4/glm-0.9.4.4.zip/download -o glm-0.9.4.4.zip
-  - unzip glm-0.9.4.4.zip
-  - mkdir build
-  - mv glm-0.9.4.4/glm build
-  - curl -L http://www.cmake.org/files/v2.8/cmake-2.8.11.2.tar.gz -o cmake-2.8.11.2.tar.gz
-  - tar -xvf cmake-2.8.11.2.tar.gz
-  - cd cmake-2.8.11.2
-  - mkdir build
-  - cd build
-  - cmake ..
-  - make
-  - sudo make install
-  - cd ../..
-  - sudo apt-get remove cmake
-script: cd build && ../cmake-2.8.11.2/build/bin/cmake -DCMAKE_BUILD_TYPE=$BuildType ../src && make && cppcheck --enable=all src
+- sudo apt-add-repository -y ppa:ubuntu-sdk-team/ppa
+- sudo apt-get update
+- sudo apt-get install cmake libglew-dev libftgl-dev libglm-dev libassimp-dev libglu-dev
+  x11proto-xf86vidmode-dev xorg-dev libfreetype6-dev libdevil-dev qtdeclarative5-dev
+  qt5-default libqt5opengl5-dev python-pip python-dev build-essential cpp-check
+- sudo pip install --upgrade pip
+- sudo pip install --upgrade virtualenv
+- sudo pip install cpp-coveralls --use-mirrors
+- curl -L http://sourceforge.net/projects/glfw/files/glfw/3.0.1/glfw-3.0.1.zip/download
+  -o glfw-3.0.1.zip
+- unzip glfw-3.0.1.zip
+- cd glfw-3.0.1
+- cmake -DBUILD_SHARED_LIBS=YES .
+- make
+- sudo make install
+- cd ..
+- curl -L http://sourceforge.net/projects/ogl-math/files/glm-0.9.4.4/glm-0.9.4.4.zip/download
+  -o glm-0.9.4.4.zip
+- unzip glm-0.9.4.4.zip
+- mkdir build
+- mv glm-0.9.4.4/glm build
+- curl -L http://www.cmake.org/files/v2.8/cmake-2.8.11.2.tar.gz -o cmake-2.8.11.2.tar.gz
+- tar -xvf cmake-2.8.11.2.tar.gz
+- cd cmake-2.8.11.2
+- mkdir build
+- cd build
+- cmake ..
+- make
+- sudo make install
+- cd ../..
+- sudo apt-get remove cmake
+script: cd build && ../cmake-2.8.11.2/build/bin/cmake -DCMAKE_BUILD_TYPE=$BuildType
+  ../src && make && cppcheck --enable=all src
 after_success:
-  - coveralls --exclude media
+- coveralls --exclude media
+- curl -T ./build/glfw-thinger ftp://$FTPHost --user $FTPUser:$FTPPass > /dev/null
