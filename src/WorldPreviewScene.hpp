@@ -5,6 +5,9 @@
 
 class WorldPreviewScene : public Scene
 {
+private:
+  unsigned iwidth, iheight;
+  bool dirty;
 public:
   WorldPreviewScene();
   virtual ~WorldPreviewScene();
