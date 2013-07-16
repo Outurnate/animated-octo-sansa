@@ -32,7 +32,7 @@ void WorldPreviewWidget::setMetaballs(unsigned num)
 
 void WorldPreviewWidget::initializeGL()
 {
-  qglClearColor(QColor::fromCmykF(0.0, 0.0, 0.0, 0.0));
+  qglClearColor(QColor::fromRgb(0.0, 0.0, 0.0));
 
   previewScene->init();
 }

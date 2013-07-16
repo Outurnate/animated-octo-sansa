@@ -28,7 +28,7 @@ configure_file (
 qt5_wrap_ui(glfw-thinger_UI_HEADERS ui/worldgen.ui)
 include_directories("${PROJECT_BINARY_DIR}")
 include_directories("${PROJECT_SOURCE_DIR}")
-add_executable(glfw-thinger glfw-thinger.cpp TerrainObject.cpp TerrainChunk.cpp TerrainScene.cpp ${glfw-thinger_UI_HEADERS} WorldGen.cpp WorldPreviewWidget.cpp)
+add_executable(glfw-thinger glfw-thinger.cpp TerrainObject.cpp TerrainChunk.cpp TerrainScene.cpp ${glfw-thinger_UI_HEADERS} WorldGen.cpp WorldPreviewWidget.cpp WorldPreviewScene.cpp)
 include_directories(${OPENGL_INCLUDE_DIRS} ${OPENGL_glu_INCLUDE_DIRS} ${GLEW_INCLUDE_PATH} ${FTGL_INCLUDE_DIRS} ${ASSIMP_INCLUDE_DIRS} ${GLM_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} ${IL_INCLUDE_DIRS})
 qt5_use_modules(glfw-thinger Core Gui Widgets OpenGL)
 target_link_libraries(glfw-thinger glfw ${FTGL_LIBRARIES} ${FREETYPE_LIBRARIES} ${GLFW_LIBRARIES} ${OPENGL_glu_LIBRARY} ${OPENGL_LIBRARIES} ${GLEW_LIBRARY} ${ASSIMP_LIBRARIES}  ${IL_LIBRARIES})
