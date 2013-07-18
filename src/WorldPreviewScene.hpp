@@ -2,12 +2,14 @@
 #define WORLDPREVIEWSCENE_H
 
 #include "Scene.hpp"
+#include "Map.hpp"
 
 class WorldPreviewScene : public Scene
 {
 private:
   unsigned iwidth, iheight;
   bool dirty;
+  Map map;
 public:
   WorldPreviewScene();
   virtual ~WorldPreviewScene();

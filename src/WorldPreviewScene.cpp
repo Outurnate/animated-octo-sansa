@@ -5,7 +5,7 @@
 #include <GLFW/glfw3.h>
 
 WorldPreviewScene::WorldPreviewScene()
-  : iwidth(256), iheight(256), dirty(true)
+  : iwidth(256), iheight(256), dirty(true), map(iwidth, iheight)
 {
 }
 
@@ -15,6 +15,13 @@ WorldPreviewScene::~WorldPreviewScene()
 
 void WorldPreviewScene::init()
 {
+  GLuint tex;
+  glGenTextures(1, &tex);
+  glBindTexture(GL_TEXTURE_2D, tex);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 }
 
 void WorldPreviewScene::key(int key, int scancode, int action, int mods)
@@ -27,14 +34,6 @@ void WorldPreviewScene::mouse(double x, double y)
 
 void WorldPreviewScene::render(double delta, int width, int height)
 {
-  GLuint tex;
-  glGenTextures(1, &tex);
-  glBindTexture(GL_TEXTURE_2D, tex);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
   unsigned cwidth  = (width < height) ? width :  (iwidth  * ((double)height / (double)iheight)),
            cheight = (width > height) ? height : (iheight * ((double)width  / (double)iwidth));
 
